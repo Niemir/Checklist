@@ -1,318 +1,403 @@
-<!DOCTYPE html>
-<html lang="pl">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>🏝️ Peguera 2026 — Lista Pakowania (Mężczyzna)</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: #0a0f1e; font-family: -apple-system, 'Helvetica Neue', sans-serif; }
-    ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: #0a0f1e; }
-    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
-  </style>
-</head>
-<body>
-  <div id="root"></div>
-  <script type="text/babel">
-    const { useState, useEffect } = React;
+import { useState, useEffect, useRef } from "react";
 
-    const CHECKLIST_DATA = [
-      { id:"beach", label:"Plaża & Basen", emoji:"🏖️", color:"#06b6d4", items:[
-        {id:"b1",text:"Kąpielówki — 2 pary"},
-        {id:"b2",text:"Rashguard / T-shirt UV z długim rękawem"},
-        {id:"b3",text:"Klapki / japonki"},
-        {id:"b4",text:"Ręcznik z mikrofibry (60×120 cm)"},
-        {id:"b5",text:"Czapka z daszkiem lub kapelusz z rondem"},
-        {id:"b6",text:"Okulary przeciwsłoneczne (filtr UV)"},
-      ]},
-      { id:"day", label:"Zwiedzanie & Dzień", emoji:"🗺️", color:"#f59e0b", items:[
-        {id:"d1",text:"T-shirty — 4–5 szt."},
-        {id:"d2",text:"Koszulka z długim rękawem — 1 szt."},
-        {id:"d3",text:"Szorty — 2 pary"},
-        {id:"d4",text:"Długie spodnie (chino/trekkingowe) — 1 para"},
-        {id:"d5",text:"Sneakersy lub buty trekkingowe"},
-        {id:"d6",text:"Kurtka przeciwwiatrowa / softshell (⚠️ MUST HAVE)"},
-        {id:"d7",text:"Cienka bluza lub sweter"},
-        {id:"d8",text:"Buff / lekki szal (tramontana 17.05)"},
-        {id:"d9",text:"Kompaktowy parasol lub peleryna"},
-      ]},
-      { id:"evening", label:"Wieczory Smart Casual", emoji:"🍷", color:"#8b5cf6", items:[
-        {id:"e1",text:"Koszula z długim rękawem (lniana/bawełna) — 1 szt."},
-        {id:"e2",text:"Koszula z krótkim rękawem lub polo — 1 szt."},
-        {id:"e3",text:"Chinos (granat/beż/oliwa) — 1 para"},
-        {id:"e4",text:"Loafery / mokasyny / białe sneakersy"},
-        {id:"e5",text:"Pasek skórzany"},
-        {id:"e6",text:"Sweter z dekoltem V lub okrągłym — 1 szt."},
-      ]},
-      { id:"underwear", label:"Bielizna & Skarpetki", emoji:"🧺", color:"#10b981", items:[
-        {id:"u1",text:"Boksery / slipy — 8 par"},
-        {id:"u2",text:"Skarpetki niewidoczne — 3 pary"},
-        {id:"u3",text:"Skarpetki normalne — 2–3 pary"},
-        {id:"u4",text:"Piżama / dres do spania"},
-      ]},
-      { id:"hygiene", label:"Higiena & Kosmetyki", emoji:"🧴", color:"#ec4899", items:[
-        {id:"h1",text:"Krem z filtrem SPF 30–50 (200 ml) ⚠️ kup w PL"},
-        {id:"h2",text:"Balsam po opalaniu z aloesem"},
-        {id:"h3",text:"Pomadka ochronna z SPF"},
-        {id:"h4",text:"Szczoteczka i pasta do zębów"},
-        {id:"h5",text:"Dezodorant"},
-        {id:"h6",text:"Szampon i żel pod prysznic (butelki podróżne)"},
-        {id:"h7",text:"Maszynka i pianka do golenia"},
-        {id:"h8",text:"Wosk / żel do włosów"},
-        {id:"h9",text:"Perfumy — atomizer 30–50 ml"},
-        {id:"h10",text:"Obcinacz do paznokci, pęseta"},
-        {id:"h11",text:"Patyczki higieniczne"},
-        {id:"h12",text:"Repelent na komary ⚠️ aktywne owady"},
-      ]},
-      { id:"pharmacy", label:"Apteczka", emoji:"💊", color:"#ef4444", items:[
-        {id:"p1",text:"Paracetamol / ibuprofen"},
-        {id:"p2",text:"Leki na rozstrój żołądka (loperamid, smecta)"},
-        {id:"p3",text:"Plastry na otarcia"},
-        {id:"p4",text:"Elektrolity w saszetkach"},
-        {id:"p5",text:"Leki własne — 7 dni + 2 dni zapasu"},
-      ]},
-      { id:"electronics", label:"Elektronika", emoji:"🔌", color:"#3b82f6", items:[
-        {id:"el1",text:"Telefon + ładowarka + kabel"},
-        {id:"el2",text:"Powerbank 10 000 mAh (tylko bagaż podręczny!)"},
-        {id:"el3",text:"Słuchawki"},
-        {id:"el4",text:"Aparat fotograficzny + karta + ładowarka"},
-        {id:"el5",text:"Uchwyt samochodowy do telefonu"},
-        {id:"el6",text:"Kindle / książka na plażę"},
-      ]},
-      { id:"documents", label:"Dokumenty & Finanse", emoji:"📋", color:"#6366f1", items:[
-        {id:"doc1",text:"Dowód osobisty lub paszport"},
-        {id:"doc2",text:"Prawo jazdy"},
-        {id:"doc3",text:"Karta EKUZ"},
-        {id:"doc4",text:"Polisa ubezpieczenia turystycznego (wydruk + PDF)"},
-        {id:"doc5",text:"Karta kredytowa + karta debetowa (2 banki)"},
-        {id:"doc6",text:"Gotówka 100–200 EUR"},
-        {id:"doc7",text:"Karty pokładowe (portfel + wydruk)"},
-        {id:"doc8",text:"Voucher hotelowy + potwierdzenie wynajmu auta"},
-        {id:"doc9",text:"Zdjęcia dokumentów — wysłane na maila / chmura"},
-      ]},
-      { id:"misc", label:"Inne drobiazgi", emoji:"🎒", color:"#84cc16", items:[
-        {id:"m1",text:"Butelka na wodę BPA-free 0,75 l"},
-        {id:"m2",text:"Woreczek strunowy na mokre kąpielówki"},
-        {id:"m3",text:"2–3 worki/torby płócienne na pranie"},
-        {id:"m4",text:"Długopis (formularz wynajmu auta)"},
-        {id:"m5",text:"Chusteczki nawilżane i higieniczne"},
-        {id:"m6",text:"Kostki organizacyjne (packing cubes)"},
-      ]},
-    ];
+const CHECKLIST_DATA = [
+  {
+    id: "beach", label: "Plaża & Basen", emoji: "🏖️", color: "#06b6d4",
+    items: [
+      { id: "b1", text: "Kąpielówki — 2 pary" },
+      { id: "b2", text: "Rashguard / T-shirt UV z długim rękawem" },
+      { id: "b3", text: "Klapki / japonki" },
+      { id: "b4", text: "Ręcznik z mikrofibry (60×120 cm)" },
+      { id: "b5", text: "Czapka z daszkiem lub kapelusz z rondem" },
+      { id: "b6", text: "Okulary przeciwsłoneczne (filtr UV)" },
+    ],
+  },
+  {
+    id: "day", label: "Zwiedzanie & Dzień", emoji: "🗺️", color: "#f59e0b",
+    items: [
+      { id: "d1", text: "T-shirty — 4–5 szt." },
+      { id: "d2", text: "Koszulka z długim rękawem — 1 szt." },
+      { id: "d3", text: "Szorty — 2 pary" },
+      { id: "d4", text: "Długie spodnie (chino/trekkingowe) — 1 para" },
+      { id: "d5", text: "Sneakersy lub buty trekkingowe" },
+      { id: "d6", text: "Kurtka przeciwwiatrowa / softshell (⚠️ MUST HAVE)" },
+      { id: "d7", text: "Cienka bluza lub sweter" },
+      { id: "d8", text: "Buff / lekki szal (tramontana 17.05)" },
+      { id: "d9", text: "Kompaktowy parasol lub peleryna" },
+    ],
+  },
+  {
+    id: "evening", label: "Wieczory Smart Casual", emoji: "🍷", color: "#8b5cf6",
+    items: [
+      { id: "e1", text: "Koszula z długim rękawem (lniana/bawełna) — 1 szt." },
+      { id: "e2", text: "Koszula z krótkim rękawem lub polo — 1 szt." },
+      { id: "e3", text: "Chinos (granat/beż/oliwa) — 1 para" },
+      { id: "e4", text: "Loafery / mokasyny / białe sneakersy" },
+      { id: "e5", text: "Pasek skórzany" },
+      { id: "e6", text: "Sweter z dekoltem V lub okrągłym — 1 szt." },
+    ],
+  },
+  {
+    id: "underwear", label: "Bielizna & Skarpetki", emoji: "🧺", color: "#10b981",
+    items: [
+      { id: "u1", text: "Boksery / slipy — 8 par" },
+      { id: "u2", text: "Skarpetki niewidoczne — 3 pary" },
+      { id: "u3", text: "Skarpetki normalne — 2–3 pary" },
+      { id: "u4", text: "Piżama / dres do spania" },
+    ],
+  },
+  {
+    id: "hygiene", label: "Higiena & Kosmetyki", emoji: "🧴", color: "#ec4899",
+    items: [
+      { id: "h1", text: "Krem z filtrem SPF 30–50 (200 ml) ⚠️ kup w PL" },
+      { id: "h2", text: "Balsam po opalaniu z aloesem" },
+      { id: "h3", text: "Pomadka ochronna z SPF" },
+      { id: "h4", text: "Szczoteczka i pasta do zębów" },
+      { id: "h5", text: "Dezodorant" },
+      { id: "h6", text: "Szampon i żel pod prysznic (butelki podróżne)" },
+      { id: "h7", text: "Maszynka i pianka do golenia" },
+      { id: "h8", text: "Wosk / żel do włosów" },
+      { id: "h9", text: "Perfumy — atomizer 30–50 ml" },
+      { id: "h10", text: "Obcinacz do paznokci, pęseta" },
+      { id: "h11", text: "Patyczki higieniczne" },
+      { id: "h12", text: "Repelent na komary ⚠️ aktywne owady" },
+    ],
+  },
+  {
+    id: "pharmacy", label: "Apteczka", emoji: "💊", color: "#ef4444",
+    items: [
+      { id: "p1", text: "Paracetamol / ibuprofen" },
+      { id: "p2", text: "Leki na rozstrój żołądka (loperamid, smecta)" },
+      { id: "p3", text: "Plastry na otarcia" },
+      { id: "p4", text: "Elektrolity w saszetkach" },
+      { id: "p5", text: "Leki własne — 7 dni + 2 dni zapasu" },
+    ],
+  },
+  {
+    id: "electronics", label: "Elektronika", emoji: "🔌", color: "#3b82f6",
+    items: [
+      { id: "el1", text: "Telefon + ładowarka + kabel" },
+      { id: "el2", text: "Powerbank 10 000 mAh (tylko bagaż podręczny!)" },
+      { id: "el3", text: "Słuchawki" },
+      { id: "el4", text: "Aparat fotograficzny + karta + ładowarka" },
+      { id: "el5", text: "Uchwyt samochodowy do telefonu" },
+      { id: "el6", text: "Kindle / książka na plażę" },
+    ],
+  },
+  {
+    id: "documents", label: "Dokumenty & Finanse", emoji: "📋", color: "#6366f1",
+    items: [
+      { id: "doc1", text: "Dowód osobisty lub paszport" },
+      { id: "doc2", text: "Prawo jazdy" },
+      { id: "doc3", text: "Karta EKUZ" },
+      { id: "doc4", text: "Polisa ubezpieczenia turystycznego (wydruk + PDF)" },
+      { id: "doc5", text: "Karta kredytowa + karta debetowa (2 banki)" },
+      { id: "doc6", text: "Gotówka 100–200 EUR" },
+      { id: "doc7", text: "Karty pokładowe (portfel + wydruk)" },
+      { id: "doc8", text: "Voucher hotelowy + potwierdzenie wynajmu auta" },
+      { id: "doc9", text: "Zdjęcia dokumentów — wysłane na maila / chmura" },
+    ],
+  },
+  {
+    id: "misc", label: "Inne drobiazgi", emoji: "🎒", color: "#84cc16",
+    items: [
+      { id: "m1", text: "Butelka na wodę BPA-free 0,75 l" },
+      { id: "m2", text: "Woreczek strunowy na mokre kąpielówki" },
+      { id: "m3", text: "2–3 worki/torby płócienne na pranie" },
+      { id: "m4", text: "Długopis (formularz wynajmu auta)" },
+      { id: "m5", text: "Chusteczki nawilżane i higieniczne" },
+      { id: "m6", text: "Kostki organizacyjne (packing cubes)" },
+    ],
+  },
+];
 
-    const WEATHER_DAYS = [
-      {day:"Pn 11.05",icon:"☀️",hi:20,lo:17,note:"Słonecznie"},
-      {day:"Wt 12.05",icon:"🌤️",hi:21,lo:17,note:"Lekkie chmury"},
-      {day:"Śr 13.05",icon:"☀️",hi:20,lo:16,note:"Słonecznie"},
-      {day:"Cz 14.05",icon:"⛅",hi:20,lo:16,note:"Popołudniem chmury"},
-      {day:"Pt 15.05",icon:"🌧️",hi:18,lo:15,note:"Przelotne opady"},
-      {day:"So 16.05",icon:"🌧️",hi:18,lo:14,note:"Deszczowo"},
-      {day:"Nd 17.05",icon:"💨",hi:18,lo:16,note:"Wiatr do 60 km/h!"},
-      {day:"Pn 18.05",icon:"☀️",hi:19,lo:16,note:"Wylot — słonecznie"},
-    ];
+const WEATHER_DAYS = [
+  { day: "Pn 11.05", icon: "☀️", hi: 20, lo: 17, note: "Słonecznie" },
+  { day: "Wt 12.05", icon: "🌤️", hi: 21, lo: 17, note: "Lekkie chmury" },
+  { day: "Śr 13.05", icon: "☀️", hi: 20, lo: 16, note: "Słonecznie" },
+  { day: "Cz 14.05", icon: "⛅", hi: 20, lo: 16, note: "Popołudniem chmury" },
+  { day: "Pt 15.05", icon: "🌧️", hi: 18, lo: 15, note: "Przelotne opady" },
+  { day: "So 16.05", icon: "🌧️", hi: 18, lo: 14, note: "Deszczowo" },
+  { day: "Nd 17.05", icon: "💨", hi: 18, lo: 16, note: "Wiatr do 60 km/h!" },
+  { day: "Pn 18.05", icon: "☀️", hi: 19, lo: 16, note: "Wylot — słonecznie" },
+];
 
-    const STORAGE_KEY = "mallorca_checklist_2026";
+const STORAGE_KEY = "mallorca_checklist_2026";
+const CUSTOM_KEY = "mallorca_custom_items_2026";
 
-    function loadChecked() {
-      try { const r = localStorage.getItem(STORAGE_KEY); return r ? JSON.parse(r) : {}; } catch { return {}; }
-    }
-    function saveChecked(d) {
-      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(d)); } catch {}
-    }
+const load = (key, fallback) => {
+  try { const r = localStorage.getItem(key); return r ? JSON.parse(r) : fallback; } catch { return fallback; }
+};
+const save = (key, data) => {
+  try { localStorage.setItem(key, JSON.stringify(data)); } catch {}
+};
 
-    function App() {
-      const [checked, setChecked] = useState(loadChecked);
-      const [openSections, setOpenSections] = useState(() =>
-        Object.fromEntries(CHECKLIST_DATA.map(s => [s.id, true]))
-      );
-      const [activeTab, setActiveTab] = useState("checklist");
+export default function MallorcaChecklist() {
+  const [checked, setChecked] = useState(() => load(STORAGE_KEY, {}));
+  const [customItems, setCustomItems] = useState(() => load(CUSTOM_KEY, {}));
+  const [inputValues, setInputValues] = useState({});
+  const [openSections, setOpenSections] = useState(() =>
+    Object.fromEntries(CHECKLIST_DATA.map((s) => [s.id, true]))
+  );
+  const [activeTab, setActiveTab] = useState("checklist");
+  const inputRefs = useRef({});
 
-      useEffect(() => { saveChecked(checked); }, [checked]);
+  useEffect(() => { save(STORAGE_KEY, checked); }, [checked]);
+  useEffect(() => { save(CUSTOM_KEY, customItems); }, [customItems]);
 
-      const totalItems = CHECKLIST_DATA.reduce((a,s) => a + s.items.length, 0);
-      const totalChecked = Object.values(checked).filter(Boolean).length;
-      const progress = Math.round((totalChecked / totalItems) * 100);
+  const allSections = CHECKLIST_DATA.map((s) => ({
+    ...s,
+    items: [...s.items, ...(customItems[s.id] ?? [])],
+  }));
 
-      const toggle = id => setChecked(p => ({...p, [id]: !p[id]}));
-      const toggleSection = id => setOpenSections(p => ({...p, [id]: !p[id]}));
-      const resetAll = () => { setChecked({}); saveChecked({}); };
-      const checkAll = sectionId => {
-        const s = CHECKLIST_DATA.find(s => s.id === sectionId);
-        const all = s.items.every(i => checked[i.id]);
-        const next = {...checked};
-        s.items.forEach(i => { next[i.id] = !all; });
-        setChecked(next);
-      };
+  const totalItems = allSections.reduce((a, s) => a + s.items.length, 0);
+  const totalChecked = Object.values(checked).filter(Boolean).length;
+  const progress = Math.round((totalChecked / totalItems) * 100);
 
-      const S = {
-        root:{fontFamily:"-apple-system,'Helvetica Neue',sans-serif",background:"#0a0f1e",minHeight:"100vh",color:"#e2e8f0",maxWidth:640,margin:"0 auto",paddingBottom:40},
-        header:{background:"linear-gradient(160deg,#0f172a 0%,#1e1b4b 100%)",padding:"24px 20px 0",borderBottom:"1px solid #1e293b"},
-        headerTop:{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:20},
-        dest:{fontSize:22,fontWeight:700,letterSpacing:"-0.5px",color:"#f1f5f9"},
-        dates:{fontSize:13,color:"#94a3b8",marginTop:3},
-        badge:{background:"rgba(6,182,212,0.12)",border:"1px solid rgba(6,182,212,0.3)",borderRadius:12,padding:"8px 14px",textAlign:"right"},
-        badgeNum:{display:"block",fontSize:18,fontWeight:700,color:"#06b6d4"},
-        badgeSub:{display:"block",fontSize:11,color:"#94a3b8",marginTop:2},
-        tabs:{display:"flex",gap:4},
-        tab:{flex:1,padding:"10px 12px",border:"none",borderRadius:"8px 8px 0 0",cursor:"pointer",fontSize:13,fontWeight:500,background:"transparent",color:"#64748b"},
-        tabActive:{background:"#0a0f1e",color:"#e2e8f0",fontWeight:600},
-        progressWrap:{padding:"14px 0 16px"},
-        progressRow:{display:"flex",justifyContent:"space-between",marginBottom:8},
-        progressLabel:{fontSize:12,color:"#94a3b8"},
-        progressPct:{fontSize:12,fontWeight:700,color:"#06b6d4"},
-        progressBar:{height:6,background:"#1e293b",borderRadius:99,overflow:"hidden"},
-        doneMsg:{marginTop:10,textAlign:"center",color:"#10b981",fontWeight:600,fontSize:14},
-        content:{padding:"16px 16px 0"},
-        resetRow:{display:"flex",justifyContent:"flex-end",marginBottom:12},
-        resetBtn:{background:"transparent",border:"1px solid #334155",color:"#64748b",padding:"5px 12px",borderRadius:8,cursor:"pointer",fontSize:12},
-        section:{background:"#0f172a",border:"1px solid #1e293b",borderRadius:12,marginBottom:10,overflow:"hidden"},
-        secHeader:{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"12px 14px",cursor:"pointer",userSelect:"none"},
-        secLeft:{display:"flex",alignItems:"center",gap:10},
-        secEmoji:{fontSize:20},
-        secLabel:{fontWeight:600,fontSize:14,color:"#f1f5f9"},
-        secCount:{fontSize:11,color:"#64748b",marginTop:1},
-        secRight:{display:"flex",alignItems:"center",gap:10},
-        checkAllBtn:{background:"transparent",border:"none",cursor:"pointer",fontSize:11,fontWeight:600,padding:0},
-        chevron:{color:"#475569",fontSize:10},
-        itemList:{borderTop:"1px solid #1e293b",padding:"4px 14px 10px"},
-        item:{display:"flex",alignItems:"center",gap:10,padding:"7px 0",cursor:"pointer",borderBottom:"1px solid #0f172a"},
-        checkbox:{width:20,height:20,borderRadius:5,border:"1.5px solid",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",transition:"all 0.15s"},
-        checkmark:{color:"#fff",fontSize:11,fontWeight:700,lineHeight:1},
-        itemText:{fontSize:13.5,color:"#cbd5e1",lineHeight:1.4},
-        itemTextDone:{textDecoration:"line-through",color:"#475569"},
-        tips:{background:"rgba(251,191,36,0.06)",border:"1px solid rgba(251,191,36,0.2)",borderRadius:12,padding:"14px 16px",marginTop:4,marginBottom:20},
-        tipsTitle:{fontWeight:700,fontSize:13,color:"#fbbf24",marginBottom:10},
-        tipRow:{fontSize:12.5,color:"#94a3b8",padding:"4px 0",lineHeight:1.5},
-        weatherGrid:{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:8,marginBottom:16},
-        wCard:{background:"#0f172a",border:"1px solid #1e293b",borderRadius:10,padding:"10px 6px",textAlign:"center"},
-        wCardRain:{border:"1px solid rgba(99,102,241,0.4)",background:"rgba(99,102,241,0.06)"},
-        wCardWind:{border:"1px solid rgba(239,68,68,0.4)",background:"rgba(239,68,68,0.06)"},
-        wCardFlight:{border:"1px solid rgba(16,185,129,0.4)",background:"rgba(16,185,129,0.06)"},
-        wDay:{fontSize:10,color:"#64748b",marginBottom:4,fontWeight:600},
-        wIcon:{fontSize:22,marginBottom:4},
-        wTemps:{display:"flex",justifyContent:"center",gap:4,marginBottom:4},
-        wHi:{fontWeight:700,fontSize:14,color:"#f1f5f9"},
-        wLo:{fontSize:13,color:"#64748b"},
-        wNote:{fontSize:9,color:"#94a3b8",lineHeight:1.3},
-        weatherInfo:{background:"#0f172a",border:"1px solid #1e293b",borderRadius:12,padding:"14px 16px"},
-        weatherInfoRow:{display:"flex",justifyContent:"space-between",fontSize:13,padding:"6px 0",borderBottom:"1px solid #1e293b",color:"#94a3b8"},
-      };
+  const toggle = (id) => setChecked((p) => ({ ...p, [id]: !p[id] }));
+  const toggleSection = (id) => setOpenSections((p) => ({ ...p, [id]: !p[id] }));
 
-      return (
-        <div style={S.root}>
-          <div style={S.header}>
-            <div style={S.headerTop}>
-              <div>
-                <div style={S.dest}>🏝️ Peguera, Majorka</div>
-                <div style={S.dates}>11 – 18 maja 2026 · 7 nocy · 👨 Mężczyzna</div>
-              </div>
-              <div style={S.badge}>
-                <span style={S.badgeNum}>18–21°C</span>
-                <span style={S.badgeSub}>dzień · morze 18°C</span>
-              </div>
+  const resetAll = () => { setChecked({}); save(STORAGE_KEY, {}); };
+
+  const checkAll = (sectionId) => {
+    const section = allSections.find((s) => s.id === sectionId);
+    const all = section.items.every((i) => checked[i.id]);
+    const next = { ...checked };
+    section.items.forEach((i) => { next[i.id] = !all; });
+    setChecked(next);
+  };
+
+  const addItem = (sectionId) => {
+    const text = (inputValues[sectionId] ?? "").trim();
+    if (!text) return;
+    const newItem = { id: `custom_${sectionId}_${Date.now()}`, text };
+    setCustomItems((p) => ({ ...p, [sectionId]: [...(p[sectionId] ?? []), newItem] }));
+    setInputValues((p) => ({ ...p, [sectionId]: "" }));
+    setTimeout(() => inputRefs.current[sectionId]?.focus(), 0);
+  };
+
+  const removeCustomItem = (sectionId, itemId) => {
+    setCustomItems((p) => ({ ...p, [sectionId]: (p[sectionId] ?? []).filter((i) => i.id !== itemId) }));
+    setChecked((p) => { const n = { ...p }; delete n[itemId]; return n; });
+  };
+
+  return (
+    <div style={S.root}>
+      <div style={S.header}>
+        <div style={S.headerTop}>
+          <div>
+            <div style={S.destination}>🏝️ Peguera, Majorka</div>
+            <div style={S.dates}>11 – 18 maja 2026 · 7 nocy</div>
+          </div>
+          <div style={S.weatherBadge}>
+            <span style={S.weatherNum}>18–21°C</span>
+            <span style={S.weatherSub}>dzień · morze 18°C</span>
+          </div>
+        </div>
+        <div style={S.tabs}>
+          {["checklist", "weather"].map((t) => (
+            <button key={t} onClick={() => setActiveTab(t)} style={{ ...S.tab, ...(activeTab === t ? S.tabActive : {}) }}>
+              {t === "checklist" ? "📦 Lista pakowania" : "🌤️ Pogoda"}
+            </button>
+          ))}
+        </div>
+        {activeTab === "checklist" && (
+          <div style={S.progressWrap}>
+            <div style={S.progressRow}>
+              <span style={S.progressLabel}>Spakowane: {totalChecked}/{totalItems}</span>
+              <span style={S.progressPct}>{progress}%</span>
             </div>
-            <div style={S.tabs}>
-              {["checklist","weather"].map(t => (
-                <button key={t} onClick={() => setActiveTab(t)} style={{...S.tab,...(activeTab===t?S.tabActive:{})}}>
-                  {t==="checklist"?"📦 Lista pakowania":"🌤️ Pogoda"}
-                </button>
-              ))}
+            <div style={S.progressBar}>
+              <div style={{ ...S.progressFill, width: `${progress}%`, background: progress === 100 ? "#10b981" : "linear-gradient(90deg, #06b6d4, #6366f1)" }} />
             </div>
-            {activeTab==="checklist" && (
-              <div style={S.progressWrap}>
-                <div style={S.progressRow}>
-                  <span style={S.progressLabel}>Spakowane: {totalChecked}/{totalItems}</span>
-                  <span style={S.progressPct}>{progress}%</span>
-                </div>
-                <div style={S.progressBar}>
-                  <div style={{height:"100%",borderRadius:99,transition:"width 0.4s ease",width:`${progress}%`,background:progress===100?"#10b981":"linear-gradient(90deg,#06b6d4,#6366f1)"}} />
-                </div>
-                {progress===100 && <div style={S.doneMsg}>✈️ Wszystko spakowane! Dobrego wyjazdu!</div>}
-              </div>
-            )}
+            {progress === 100 && <div style={S.doneMsg}>✈️ Wszystko spakowane! Dobrego wyjazdu!</div>}
+          </div>
+        )}
+      </div>
+
+      {activeTab === "checklist" && (
+        <div style={S.content}>
+          <div style={S.resetRow}>
+            <button onClick={resetAll} style={S.resetBtn}>↺ Resetuj zaznaczenia</button>
           </div>
 
-          {activeTab==="checklist" && (
-            <div style={S.content}>
-              <div style={S.resetRow}>
-                <button onClick={resetAll} style={S.resetBtn}>↺ Resetuj wszystko</button>
-              </div>
-              {CHECKLIST_DATA.map(section => {
-                const secChecked = section.items.filter(i => checked[i.id]).length;
-                const done = secChecked === section.items.length;
-                const open = openSections[section.id];
-                return (
-                  <div key={section.id} style={S.section}>
-                    <div style={{...S.secHeader,borderLeft:`3px solid ${section.color}`}} onClick={() => toggleSection(section.id)}>
-                      <div style={S.secLeft}>
-                        <span style={S.secEmoji}>{section.emoji}</span>
-                        <div>
-                          <div style={S.secLabel}>{section.label}</div>
-                          <div style={S.secCount}>{secChecked}/{section.items.length} {done && <span style={{color:"#10b981"}}>✓ gotowe</span>}</div>
-                        </div>
-                      </div>
-                      <div style={S.secRight}>
-                        <button onClick={e=>{e.stopPropagation();checkAll(section.id);}} style={{...S.checkAllBtn,color:section.color}}>
-                          {section.items.every(i=>checked[i.id])?"Odznacz":"Zaznacz"}
-                        </button>
-                        <span style={S.chevron}>{open?"▲":"▼"}</span>
+          {allSections.map((section) => {
+            const baseIds = new Set(CHECKLIST_DATA.find((s) => s.id === section.id).items.map((i) => i.id));
+            const secChecked = section.items.filter((i) => checked[i.id]).length;
+            const done = secChecked === section.items.length;
+            const open = openSections[section.id];
+
+            return (
+              <div key={section.id} style={S.section}>
+                <div style={{ ...S.sectionHeader, borderLeft: `3px solid ${section.color}` }} onClick={() => toggleSection(section.id)}>
+                  <div style={S.sectionLeft}>
+                    <span style={S.sectionEmoji}>{section.emoji}</span>
+                    <div>
+                      <div style={S.sectionLabel}>{section.label}</div>
+                      <div style={S.sectionCount}>
+                        {secChecked}/{section.items.length}{" "}
+                        {done && <span style={{ color: "#10b981" }}>✓ gotowe</span>}
                       </div>
                     </div>
-                    {open && (
-                      <div style={S.itemList}>
-                        {section.items.map(item => (
-                          <div key={item.id} style={S.item} onClick={() => toggle(item.id)}>
-                            <div style={{...S.checkbox,background:checked[item.id]?section.color:"transparent",borderColor:checked[item.id]?section.color:"#334155"}}>
-                              {checked[item.id] && <span style={S.checkmark}>✓</span>}
-                            </div>
-                            <span style={{...S.itemText,...(checked[item.id]?S.itemTextDone:{})}}>{item.text}</span>
+                  </div>
+                  <div style={S.sectionRight}>
+                    <button onClick={(e) => { e.stopPropagation(); checkAll(section.id); }} style={{ ...S.checkAllBtn, color: section.color }}>
+                      {section.items.every((i) => checked[i.id]) ? "Odznacz" : "Zaznacz"}
+                    </button>
+                    <span style={S.chevron}>{open ? "▲" : "▼"}</span>
+                  </div>
+                </div>
+
+                {open && (
+                  <div style={S.itemList}>
+                    {section.items.map((item) => {
+                      const isCustom = !baseIds.has(item.id);
+                      return (
+                        <div key={item.id} style={S.item}>
+                          <div
+                            style={{ ...S.checkbox, background: checked[item.id] ? section.color : "transparent", borderColor: checked[item.id] ? section.color : "#334155" }}
+                            onClick={() => toggle(item.id)}
+                          >
+                            {checked[item.id] && <span style={S.checkmark}>✓</span>}
                           </div>
-                        ))}
+                          <span
+                            style={{ ...S.itemText, flex: 1, ...(checked[item.id] ? S.itemTextChecked : {}) }}
+                            onClick={() => toggle(item.id)}
+                          >
+                            {item.text}
+                          </span>
+                          {isCustom && (
+                            <button onClick={() => removeCustomItem(section.id, item.id)} style={S.removeBtn} title="Usuń">×</button>
+                          )}
+                        </div>
+                      );
+                    })}
+
+                    {/* Add item row */}
+                    <div style={S.addRow}>
+                      <div style={{ ...S.addIconWrap, borderColor: section.color }}>
+                        <span style={{ color: section.color, fontSize: 14, fontWeight: 700, lineHeight: 1 }}>+</span>
                       </div>
-                    )}
+                      <input
+                        ref={(el) => { inputRefs.current[section.id] = el; }}
+                        type="text"
+                        placeholder="Dodaj rzecz..."
+                        value={inputValues[section.id] ?? ""}
+                        onChange={(e) => setInputValues((p) => ({ ...p, [section.id]: e.target.value }))}
+                        onKeyDown={(e) => { if (e.key === "Enter") addItem(section.id); }}
+                        style={S.addInput}
+                      />
+                      <button
+                        onClick={() => addItem(section.id)}
+                        disabled={!(inputValues[section.id] ?? "").trim()}
+                        style={{
+                          ...S.addBtn,
+                          background: (inputValues[section.id] ?? "").trim() ? section.color : "#1e293b",
+                          color: (inputValues[section.id] ?? "").trim() ? "#fff" : "#475569",
+                          cursor: (inputValues[section.id] ?? "").trim() ? "pointer" : "default",
+                        }}
+                      >
+                        Dodaj
+                      </button>
+                    </div>
                   </div>
-                );
-              })}
-              <div style={S.tips}>
-                <div style={S.tipsTitle}>💡 Kluczowe przypomnienia</div>
-                {[
-                  "⚠️ Powerbank TYLKO do plecaka kabinowego — nigdy do walizki",
-                  "⚠️ Żyletki TYLKO do walizki rejestrowanej",
-                  "⚠️ Kurtka wiatrówka — tramontana 17.05 wieje do 60 km/h",
-                  "⚠️ Krem SPF — kup w Polsce, na miejscu 2× droższy",
-                  "⚠️ Leki na 1–2 dni zapasu — do plecaka kabinowego",
-                ].map((tip,i) => <div key={i} style={S.tipRow}>{tip}</div>)}
+                )}
               </div>
-            </div>
-          )}
+            );
+          })}
 
-          {activeTab==="weather" && (
-            <div style={S.content}>
-              <div style={S.weatherGrid}>
-                {WEATHER_DAYS.map((d,i) => (
-                  <div key={i} style={{...S.wCard,...(d.note.includes("Deszczowo")||d.note.includes("opady")?S.wCardRain:{}),...(d.note.includes("Wiatr")?S.wCardWind:{}),...(i===WEATHER_DAYS.length-1?S.wCardFlight:{})}}>
-                    <div style={S.wDay}>{d.day}</div>
-                    <div style={S.wIcon}>{d.icon}</div>
-                    <div style={S.wTemps}><span style={S.wHi}>{d.hi}°</span><span style={S.wLo}>{d.lo}°</span></div>
-                    <div style={S.wNote}>{d.note}</div>
-                  </div>
-                ))}
-              </div>
-              <div style={S.weatherInfo}>
-                {[["🌊 Temperatura morza","18°C"],["☀️ Indeks UV","5–8 (wysoki)"],["🌅 Wschód/zachód słońca","6:35 / 21:00"],["💧 Łączne opady","~6 mm (pt–so)"]].map(([k,v]) => (
-                  <div key={k} style={S.weatherInfoRow}><span>{k}</span><strong style={{color:"#e2e8f0"}}>{v}</strong></div>
-                ))}
-              </div>
-            </div>
-          )}
+          <div style={S.tips}>
+            <div style={S.tipsTitle}>💡 Kluczowe przypomnienia</div>
+            {[
+              "⚠️ Powerbank TYLKO do plecaka kabinowego — nigdy do walizki",
+              "⚠️ Żyletki TYLKO do walizki rejestrowanej",
+              "⚠️ Kurtka wiatrówka — tramontana 17.05 wieje do 60 km/h",
+              "⚠️ Krem SPF — kup w Polsce, na miejscu 2× droższy",
+              "⚠️ Leki na 1–2 dni zapasu — do plecaka kabinowego",
+            ].map((tip, i) => <div key={i} style={S.tipRow}>{tip}</div>)}
+          </div>
         </div>
-      );
-    }
+      )}
 
-    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
-  </script>
-</body>
-</html>
+      {activeTab === "weather" && (
+        <div style={S.content}>
+          <div style={S.weatherGrid}>
+            {WEATHER_DAYS.map((d, i) => (
+              <div key={i} style={{ ...S.weatherCard, ...(d.note.includes("Deszczowo") || d.note.includes("opady") ? S.weatherCardRain : {}), ...(d.note.includes("Wiatr") ? S.weatherCardWind : {}), ...(i === WEATHER_DAYS.length - 1 ? S.weatherCardFlight : {}) }}>
+                <div style={S.wDay}>{d.day}</div>
+                <div style={S.wIcon}>{d.icon}</div>
+                <div style={S.wTemps}><span style={S.wHi}>{d.hi}°</span><span style={S.wLo}>{d.lo}°</span></div>
+                <div style={S.wNote}>{d.note}</div>
+              </div>
+            ))}
+          </div>
+          <div style={S.weatherInfo}>
+            {[["🌊 Temperatura morza", "18°C"], ["☀️ Indeks UV", "5–8 (wysoki)"], ["🌅 Wschód/zachód słońca", "6:35 / 21:00"], ["💧 Łączne opady", "~6 mm (pt–so)"]].map(([k, v]) => (
+              <div key={k} style={S.weatherInfoRow}><span>{k}</span><strong>{v}</strong></div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+const S = {
+  root: { fontFamily: "'DM Sans','Helvetica Neue',sans-serif", background: "#0a0f1e", minHeight: "100vh", color: "#e2e8f0", maxWidth: 640, margin: "0 auto", paddingBottom: 40 },
+  header: { background: "linear-gradient(160deg,#0f172a 0%,#1e1b4b 100%)", padding: "24px 20px 0", borderBottom: "1px solid #1e293b" },
+  headerTop: { display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 20 },
+  destination: { fontSize: 22, fontWeight: 700, letterSpacing: "-0.5px", color: "#f1f5f9" },
+  dates: { fontSize: 13, color: "#94a3b8", marginTop: 3 },
+  weatherBadge: { background: "rgba(6,182,212,0.12)", border: "1px solid rgba(6,182,212,0.3)", borderRadius: 12, padding: "8px 14px", textAlign: "right" },
+  weatherNum: { display: "block", fontSize: 18, fontWeight: 700, color: "#06b6d4" },
+  weatherSub: { display: "block", fontSize: 11, color: "#94a3b8", marginTop: 2 },
+  tabs: { display: "flex", gap: 4 },
+  tab: { flex: 1, padding: "10px 12px", border: "none", borderRadius: "8px 8px 0 0", cursor: "pointer", fontSize: 13, fontWeight: 500, background: "transparent", color: "#64748b", transition: "all 0.15s" },
+  tabActive: { background: "#0a0f1e", color: "#e2e8f0", fontWeight: 600 },
+  progressWrap: { padding: "14px 0 16px" },
+  progressRow: { display: "flex", justifyContent: "space-between", marginBottom: 8 },
+  progressLabel: { fontSize: 12, color: "#94a3b8" },
+  progressPct: { fontSize: 12, fontWeight: 700, color: "#06b6d4" },
+  progressBar: { height: 6, background: "#1e293b", borderRadius: 99, overflow: "hidden" },
+  progressFill: { height: "100%", borderRadius: 99, transition: "width 0.4s ease" },
+  doneMsg: { marginTop: 10, textAlign: "center", color: "#10b981", fontWeight: 600, fontSize: 14 },
+  content: { padding: "16px 16px 0" },
+  resetRow: { display: "flex", justifyContent: "flex-end", marginBottom: 12 },
+  resetBtn: { background: "transparent", border: "1px solid #334155", color: "#64748b", padding: "5px 12px", borderRadius: 8, cursor: "pointer", fontSize: 12 },
+  section: { background: "#0f172a", border: "1px solid #1e293b", borderRadius: 12, marginBottom: 10, overflow: "hidden" },
+  sectionHeader: { display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px 14px", cursor: "pointer", userSelect: "none" },
+  sectionLeft: { display: "flex", alignItems: "center", gap: 10 },
+  sectionEmoji: { fontSize: 20 },
+  sectionLabel: { fontWeight: 600, fontSize: 14, color: "#f1f5f9" },
+  sectionCount: { fontSize: 11, color: "#64748b", marginTop: 1 },
+  sectionRight: { display: "flex", alignItems: "center", gap: 10 },
+  checkAllBtn: { background: "transparent", border: "none", cursor: "pointer", fontSize: 11, fontWeight: 600, padding: 0 },
+  chevron: { color: "#475569", fontSize: 10 },
+  itemList: { borderTop: "1px solid #1e293b", padding: "4px 14px 6px" },
+  item: { display: "flex", alignItems: "center", gap: 10, padding: "7px 0", borderBottom: "1px solid #0f172a" },
+  checkbox: { width: 20, height: 20, borderRadius: 5, border: "1.5px solid", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", transition: "all 0.15s" },
+  checkmark: { color: "#fff", fontSize: 11, fontWeight: 700, lineHeight: 1 },
+  itemText: { fontSize: 13.5, color: "#cbd5e1", lineHeight: 1.4, cursor: "pointer" },
+  itemTextChecked: { textDecoration: "line-through", color: "#475569" },
+  removeBtn: { background: "transparent", border: "none", color: "#475569", fontSize: 18, lineHeight: 1, cursor: "pointer", padding: "0 2px", flexShrink: 0 },
+  addRow: { display: "flex", alignItems: "center", gap: 8, paddingTop: 8, paddingBottom: 2 },
+  addIconWrap: { width: 20, height: 20, borderRadius: 5, border: "1.5px dashed", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" },
+  addInput: { flex: 1, background: "#0a0f1e", border: "1px solid #1e293b", borderRadius: 7, padding: "6px 10px", fontSize: 13, color: "#e2e8f0", outline: "none" },
+  addBtn: { border: "none", borderRadius: 7, padding: "6px 12px", fontSize: 12, fontWeight: 600, flexShrink: 0, transition: "all 0.15s" },
+  tips: { background: "rgba(251,191,36,0.06)", border: "1px solid rgba(251,191,36,0.2)", borderRadius: 12, padding: "14px 16px", marginTop: 4, marginBottom: 20 },
+  tipsTitle: { fontWeight: 700, fontSize: 13, color: "#fbbf24", marginBottom: 10 },
+  tipRow: { fontSize: 12.5, color: "#94a3b8", padding: "4px 0", lineHeight: 1.5 },
+  weatherGrid: { display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 8, marginBottom: 16 },
+  weatherCard: { background: "#0f172a", border: "1px solid #1e293b", borderRadius: 10, padding: "10px 6px", textAlign: "center" },
+  weatherCardRain: { border: "1px solid rgba(99,102,241,0.4)", background: "rgba(99,102,241,0.06)" },
+  weatherCardWind: { border: "1px solid rgba(239,68,68,0.4)", background: "rgba(239,68,68,0.06)" },
+  weatherCardFlight: { border: "1px solid rgba(16,185,129,0.4)", background: "rgba(16,185,129,0.06)" },
+  wDay: { fontSize: 10, color: "#64748b", marginBottom: 4, fontWeight: 600 },
+  wIcon: { fontSize: 22, marginBottom: 4 },
+  wTemps: { display: "flex", justifyContent: "center", gap: 4, marginBottom: 4 },
+  wHi: { fontWeight: 700, fontSize: 14, color: "#f1f5f9" },
+  wLo: { fontSize: 13, color: "#64748b" },
+  wNote: { fontSize: 9, color: "#94a3b8", lineHeight: 1.3 },
+  weatherInfo: { background: "#0f172a", border: "1px solid #1e293b", borderRadius: 12, padding: "14px 16px" },
+  weatherInfoRow: { display: "flex", justifyContent: "space-between", fontSize: 13, padding: "6px 0", borderBottom: "1px solid #1e293b", color: "#94a3b8" },
+};
