@@ -1,1 +1,334 @@
 
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🇬🇷 Kos 2026 — Checklista Dasha & Wanacik</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background:#07111f; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif; color:#e5eefb; }
+    button, input { font: inherit; }
+    ::-webkit-scrollbar { width:6px; }
+    ::-webkit-scrollbar-track { background:#07111f; }
+    ::-webkit-scrollbar-thumb { background:#334155; border-radius:99px; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useEffect, useMemo, useRef, useState } = React;
+
+    const WEATHER = [
+      { day:"Pn 08.06", icon:"☀️", hi:30, lo:22, note:"dużo słońca" },
+      { day:"Wt 09.06", icon:"🌤️", hi:28, lo:21, note:"słonecznie" },
+      { day:"Śr 10.06", icon:"☀️", hi:28, lo:20, note:"pełne słońce" },
+      { day:"Cz 11.06", icon:"☀️", hi:28, lo:20, note:"pełne słońce" },
+      { day:"Pt 12.06", icon:"☀️", hi:29, lo:21, note:"gorąco" },
+      { day:"So 13.06", icon:"☀️", hi:29, lo:21, note:"gorąco" },
+      { day:"Nd 14.06", icon:"☀️", hi:28, lo:20, note:"słonecznie" },
+    ];
+
+    const COMMON = [
+      { id:"airport", label:"Lotnisko i dokumenty", emoji:"🛂", color:"#60a5fa", items:[
+        "Dowód osobisty albo paszport",
+        "Karty pokładowe offline w telefonie",
+        "Ubezpieczenie + EKUZ, jeśli macie",
+        "Karta płatnicza + trochę euro",
+        "Voucher hotelu / dokumenty z biura",
+        "Telefon naładowany przed wyjściem",
+      ]},
+      { id:"cabin", label:"Kabinowy / plecak", emoji:"🎒", color:"#22c55e", items:[
+        "Dokumenty, telefon, portfel",
+        "Powerbank, ładowarka, słuchawki",
+        "Leki stałe i najważniejsze tabletki",
+        "Jedna bielizna + jedna koszulka",
+        "Strój kąpielowy na start",
+        "Płyny max 100 ml w przezroczystym woreczku",
+        "Pusta butelka na wodę po kontroli",
+      ]},
+      { id:"liquids", label:"Nie do kabinowego", emoji:"🚫", color:"#fb7185", items:[
+        "SPF, szampon i żele powyżej 100 ml",
+        "Nożyczki, żyletki, scyzoryk, korkociąg",
+        "Duży dezodorant spray / duże perfumy",
+        "Powerbank NIE do rejestrowanego",
+      ]},
+      { id:"allinc", label:"All inclusive i hotel", emoji:"🏨", color:"#a78bfa", items:[
+        "Mały plecak na wycieczkę",
+        "Torba plażowa / materiałowa",
+        "Worek na brudną bieliznę",
+        "Woreczki strunowe na mokre rzeczy",
+        "Karty / Kindle / książka",
+        "Opcjonalnie: klipsy do ręczników",
+      ]},
+    ];
+
+    const PEOPLE = {
+      dasha: {
+        name:"Dasha", icon:"👩", storage:"kos_dasha_2026", custom:"kos_dasha_custom_2026",
+        subtitle:"Kobieta · 7 dni · plaża, basen, kolacje, lekkie zwiedzanie",
+        sections:[
+          { id:"registered", label:"Rejestrowany", emoji:"🧳", color:"#38bdf8", items:[
+            "Stroje kąpielowe 2-3",
+            "Sukienki / zestawy wieczorne 3-4",
+            "Topy / koszulki 5-6",
+            "Szorty / spódniczki 2-3",
+            "Lekka narzutka / koszula 1",
+            "Bielizna 8-10 kompletów",
+            "Skarpetki 3-4 pary",
+            "Sandały + wygodne buty",
+          ]},
+          { id:"beach", label:"Plaża i basen", emoji:"🏖️", color:"#06b6d4", items:[
+            "Klapki basenowe",
+            "Kapelusz / czapka",
+            "Okulary UV",
+            "Pareo / narzutka plażowa",
+            "Buty do wody, jeśli macie",
+          ]},
+          { id:"cosmetics", label:"Kosmetyki", emoji:"🧴", color:"#ec4899", items:[
+            "SPF 50 twarz + ciało",
+            "Balsam po opalaniu / aloes",
+            "Demakijaż + lekki makijaż",
+            "Szczoteczka, pasta, dezodorant",
+            "Szampon / odżywka do włosów",
+            "Gumki, spinki, szczotka",
+            "Produkty higieniczne na zapas",
+          ]},
+          { id:"pharmacy", label:"Apteczka", emoji:"💊", color:"#ef4444", items:[
+            "Leki osobiste do kabinowego",
+            "Przeciwbólowe / przeciwgorączkowe",
+            "Elektrolity",
+            "Coś na żołądek i biegunkę",
+            "Plastry + coś po ukąszeniach",
+          ]},
+        ],
+      },
+      wanacik: {
+        name:"Wanacik", icon:"👨", storage:"kos_wanacik_2026", custom:"kos_wanacik_custom_2026",
+        subtitle:"Mężczyzna · 7 dni · plaża, basen, kolacje, lekkie zwiedzanie",
+        sections:[
+          { id:"registered", label:"Rejestrowany", emoji:"🧳", color:"#38bdf8", items:[
+            "Kąpielówki 2-3",
+            "T-shirty / polo 6-7",
+            "Szorty 3-4",
+            "Koszule lniane / polo na kolacje 2-3",
+            "Lekkie długie spodnie 1",
+            "Bielizna 8-10 szt.",
+            "Skarpetki 4-5 par",
+            "Sneakersy + klapki",
+          ]},
+          { id:"beach", label:"Plaża i basen", emoji:"🏖️", color:"#06b6d4", items:[
+            "Klapki basenowe",
+            "Czapka z daszkiem",
+            "Okulary UV",
+            "Lekka koszulka na słońce",
+            "Buty do wody, jeśli macie",
+          ]},
+          { id:"cosmetics", label:"Kosmetyki", emoji:"🧴", color:"#f59e0b", items:[
+            "SPF 50 twarz + ciało",
+            "Balsam po opalaniu / aloes",
+            "Szczoteczka, pasta, dezodorant",
+            "Szampon / żel pod prysznic",
+            "Maszynka + pianka do golenia",
+            "Perfumy małe / atomizer",
+          ]},
+          { id:"pharmacy", label:"Apteczka", emoji:"💊", color:"#ef4444", items:[
+            "Leki osobiste do kabinowego",
+            "Przeciwbólowe / przeciwgorączkowe",
+            "Elektrolity",
+            "Coś na żołądek i biegunkę",
+            "Plastry + coś po ukąszeniach",
+          ]},
+        ],
+      }
+    };
+
+    const load = (key, fallback) => {
+      try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; } catch { return fallback; }
+    };
+    const save = (key, value) => {
+      try { localStorage.setItem(key, JSON.stringify(value)); } catch {}
+    };
+
+    function App() {
+      const [active, setActive] = useState("dasha");
+      const person = PEOPLE[active];
+      const [checked, setChecked] = useState(() => load(PEOPLE.dasha.storage, {}));
+      const [custom, setCustom] = useState(() => load(PEOPLE.dasha.custom, {}));
+      const [input, setInput] = useState({});
+      const [open, setOpen] = useState({});
+      const inputRefs = useRef({});
+
+      useEffect(() => {
+        setChecked(load(person.storage, {}));
+        setCustom(load(person.custom, {}));
+        setInput({});
+      }, [active]);
+
+      useEffect(() => save(person.storage, checked), [checked, active]);
+      useEffect(() => save(person.custom, custom), [custom, active]);
+
+      const sections = useMemo(() => {
+        const base = [...person.sections, ...COMMON];
+        return base.map(section => ({
+          ...section,
+          items: [
+            ...section.items.map((text, idx) => ({ id:`${active}_${section.id}_${idx}`, text, custom:false })),
+            ...(custom[section.id] || [])
+          ]
+        }));
+      }, [person, custom, active]);
+
+      const total = sections.reduce((sum, s) => sum + s.items.length, 0);
+      const done = sections.reduce((sum, s) => sum + s.items.filter(i => checked[i.id]).length, 0);
+      const pct = total ? Math.round(done / total * 100) : 0;
+
+      const toggle = id => setChecked(prev => ({ ...prev, [id]: !prev[id] }));
+      const reset = () => setChecked({});
+      const toggleAll = section => {
+        const allChecked = section.items.every(i => checked[i.id]);
+        const next = { ...checked };
+        section.items.forEach(i => next[i.id] = !allChecked);
+        setChecked(next);
+      };
+      const addItem = sectionId => {
+        const text = (input[sectionId] || "").trim();
+        if (!text) return;
+        setCustom(prev => ({
+          ...prev,
+          [sectionId]: [...(prev[sectionId] || []), { id:`custom_${active}_${sectionId}_${Date.now()}`, text, custom:true }]
+        }));
+        setInput(prev => ({ ...prev, [sectionId]: "" }));
+        setTimeout(() => inputRefs.current[sectionId]?.focus(), 0);
+      };
+      const removeCustom = (sectionId, itemId) => {
+        setCustom(prev => ({ ...prev, [sectionId]:(prev[sectionId] || []).filter(i => i.id !== itemId) }));
+        setChecked(prev => { const n = { ...prev }; delete n[itemId]; return n; });
+      };
+
+      return <main style={S.root}>
+        <header style={S.header}>
+          <div style={S.headerTop}>
+            <div>
+              <div style={S.title}>🇬🇷 Kos 2026</div>
+              <div style={S.sub}>8-15 czerwca · all inclusive · pierwszy lot</div>
+            </div>
+            <div style={S.weatherBadge}>
+              <strong>28-30°C</strong>
+              <span>słońce · noce 20-22°C</span>
+            </div>
+          </div>
+
+          <div style={S.tabs}>
+            {Object.entries(PEOPLE).map(([key, p]) => <button key={key} onClick={() => setActive(key)} style={{...S.tab, ...(active===key ? S.tabActive : {})}}>{p.icon} {p.name}</button>)}
+          </div>
+
+          <div style={S.personRow}>
+            <div>
+              <div style={S.person}>{person.icon} {person.name}</div>
+              <div style={S.personSub}>{person.subtitle}</div>
+            </div>
+            <button onClick={reset} style={S.reset}>Reset</button>
+          </div>
+
+          <div style={S.progressRow}>
+            <span>Spakowane: {done}/{total}</span><strong>{pct}%</strong>
+          </div>
+          <div style={S.progress}><div style={{...S.progressFill, width:`${pct}%`, background:pct===100 ? "#22c55e" : "linear-gradient(90deg,#38bdf8,#818cf8)"}} /></div>
+        </header>
+
+        <section style={S.weatherStrip}>
+          {WEATHER.map((d, i) => <div key={i} style={S.wCard}>
+            <div style={S.wDay}>{d.day}</div><div style={S.wIcon}>{d.icon}</div>
+            <div style={S.wTemp}>{d.hi}°/{d.lo}°</div><div style={S.wNote}>{d.note}</div>
+          </div>)}
+        </section>
+
+        <section style={S.infoBox}>
+          <strong>Najkrócej:</strong> duży SPF, czapka, okulary i lekkie ubrania. Do kabinowego dokumenty, leki, elektronika, powerbank i zapas na 1 dzień. Duże płyny i ostre rzeczy do rejestrowanego.
+        </section>
+
+        <section style={S.content}>
+          {sections.map(section => {
+            const isOpen = open[section.id] ?? true;
+            const count = section.items.filter(i => checked[i.id]).length;
+            const sectionDone = count === section.items.length;
+            return <div key={section.id} style={S.section}>
+              <div style={{...S.sectionHeader, borderLeft:`4px solid ${section.color}`}} onClick={() => setOpen(prev => ({...prev, [section.id]: !isOpen}))}>
+                <div style={S.sectionTitleWrap}>
+                  <span style={S.emoji}>{section.emoji}</span>
+                  <div><div style={S.sectionTitle}>{section.label}</div><div style={S.count}>{count}/{section.items.length}{sectionDone ? " · gotowe" : ""}</div></div>
+                </div>
+                <div style={S.sectionActions}>
+                  <button style={{...S.markBtn, color:section.color}} onClick={e => { e.stopPropagation(); toggleAll(section); }}>{sectionDone ? "Odznacz" : "Zaznacz"}</button>
+                  <span style={S.chev}>{isOpen ? "▲" : "▼"}</span>
+                </div>
+              </div>
+              {isOpen && <div style={S.items}>
+                {section.items.map(item => <div key={item.id} style={S.item}>
+                  <button onClick={() => toggle(item.id)} style={{...S.box, borderColor:checked[item.id] ? section.color : "#334155", background:checked[item.id] ? section.color : "transparent"}}>{checked[item.id] ? "✓" : ""}</button>
+                  <span onClick={() => toggle(item.id)} style={{...S.itemText, ...(checked[item.id] ? S.itemDone : {})}}>{item.text}</span>
+                  {item.custom && <button style={S.remove} onClick={() => removeCustom(section.id, item.id)}>×</button>}
+                </div>)}
+                <div style={S.addRow}>
+                  <input ref={el => inputRefs.current[section.id] = el} value={input[section.id] || ""} onChange={e => setInput(prev => ({...prev, [section.id]: e.target.value}))} onKeyDown={e => e.key === "Enter" && addItem(section.id)} placeholder="Dodaj własną rzecz..." style={S.input}/>
+                  <button onClick={() => addItem(section.id)} style={{...S.addBtn, background:section.color}}>Dodaj</button>
+                </div>
+              </div>}
+            </div>
+          })}
+        </section>
+
+        <section style={S.footerBox}>
+          <div style={S.footerTitle}>✅ Przed wyjściem z domu</div>
+          <p>Dokumenty, karty pokładowe, telefony, portfele, leki, powerbank, zamknięte okna, śmieci wyniesione, sprawdzony limit bagażu.</p>
+          <div style={{...S.footerTitle, marginTop:12}}>✈️ Must-have na lotnisko</div>
+          <p>Dokument, boarding pass, telefon, portfel, płyny 100 ml w woreczku, leki, powerbank, słuchawki, pusta butelka na wodę.</p>
+        </section>
+      </main>;
+    }
+
+    const S = {
+      root:{maxWidth:720, margin:"0 auto", minHeight:"100vh", background:"#07111f", paddingBottom:40},
+      header:{background:"linear-gradient(160deg,#0f172a,#172554)", padding:"22px 16px 16px", borderBottom:"1px solid #1e293b"},
+      headerTop:{display:"flex", justifyContent:"space-between", gap:12, alignItems:"flex-start", marginBottom:16},
+      title:{fontSize:25, fontWeight:800, letterSpacing:"-0.6px"}, sub:{fontSize:13, color:"#94a3b8", marginTop:3},
+      weatherBadge:{textAlign:"right", border:"1px solid rgba(56,189,248,.35)", background:"rgba(56,189,248,.1)", borderRadius:14, padding:"9px 12px", minWidth:120},
+      weatherBadge:{textAlign:"right", border:"1px solid rgba(56,189,248,.35)", background:"rgba(56,189,248,.1)", borderRadius:14, padding:"9px 12px", minWidth:120},
+      weatherBadgeStrong:{display:"block"},
+      tabs:{display:"grid", gridTemplateColumns:"1fr 1fr", gap:8, marginBottom:14},
+      tab:{border:"1px solid #334155", background:"#0f172a", color:"#94a3b8", borderRadius:12, padding:"10px 12px", cursor:"pointer", fontWeight:700},
+      tabActive:{background:"#e5eefb", color:"#0f172a", borderColor:"#e5eefb"},
+      personRow:{display:"flex", justifyContent:"space-between", alignItems:"center", gap:12, marginBottom:12},
+      person:{fontSize:18, fontWeight:800}, personSub:{fontSize:12.5, color:"#94a3b8", marginTop:2},
+      reset:{background:"transparent", color:"#94a3b8", border:"1px solid #334155", borderRadius:10, padding:"7px 10px", cursor:"pointer", fontSize:12},
+      progressRow:{display:"flex", justifyContent:"space-between", fontSize:12, color:"#94a3b8", marginBottom:7},
+      progress:{height:7, background:"#1e293b", borderRadius:999, overflow:"hidden"}, progressFill:{height:"100%", transition:"width .25s ease"},
+      weatherStrip:{display:"grid", gridTemplateColumns:"repeat(7, minmax(78px,1fr))", gap:8, overflowX:"auto", padding:"14px 12px 6px"},
+      wCard:{background:"#0f172a", border:"1px solid #1e293b", borderRadius:12, padding:"10px 8px", textAlign:"center", minWidth:78},
+      wDay:{fontSize:10.5, color:"#94a3b8", fontWeight:700}, wIcon:{fontSize:22, margin:"5px 0"}, wTemp:{fontSize:13, fontWeight:800}, wNote:{fontSize:10, color:"#94a3b8", marginTop:3},
+      infoBox:{margin:"10px 12px", padding:"12px 13px", borderRadius:14, background:"rgba(34,197,94,.08)", border:"1px solid rgba(34,197,94,.22)", color:"#cbd5e1", fontSize:13, lineHeight:1.45},
+      content:{padding:"4px 12px 0"},
+      section:{background:"#0f172a", border:"1px solid #1e293b", borderRadius:14, overflow:"hidden", marginBottom:10},
+      sectionHeader:{display:"flex", alignItems:"center", justifyContent:"space-between", gap:10, padding:"12px 12px", cursor:"pointer"},
+      sectionTitleWrap:{display:"flex", alignItems:"center", gap:10}, emoji:{fontSize:20}, sectionTitle:{fontWeight:800, fontSize:14.5}, count:{fontSize:11.5, color:"#64748b", marginTop:1},
+      sectionActions:{display:"flex", alignItems:"center", gap:10}, markBtn:{background:"transparent", border:0, fontSize:11.5, fontWeight:800, cursor:"pointer"}, chev:{fontSize:10, color:"#64748b"},
+      items:{borderTop:"1px solid #1e293b", padding:"4px 12px 9px"},
+      item:{display:"flex", alignItems:"center", gap:9, padding:"7px 0", minHeight:34},
+      box:{width:20, height:20, borderRadius:6, border:"1.5px solid #334155", color:"white", fontSize:12, fontWeight:900, display:"flex", alignItems:"center", justifyContent:"center", cursor:"pointer", flexShrink:0},
+      itemText:{fontSize:13.5, lineHeight:1.35, color:"#dbe7f5", cursor:"pointer", flex:1}, itemDone:{textDecoration:"line-through", color:"#64748b"},
+      remove:{background:"transparent", border:0, color:"#64748b", fontSize:20, cursor:"pointer", padding:"0 4px"},
+      addRow:{display:"flex", gap:8, paddingTop:8}, input:{flex:1, minWidth:0, background:"#07111f", color:"#e5eefb", border:"1px solid #1e293b", borderRadius:10, padding:"8px 10px", outline:"none"},
+      addBtn:{border:0, color:"white", borderRadius:10, padding:"8px 10px", fontWeight:800, cursor:"pointer"},
+      footerBox:{margin:"12px", padding:"14px", borderRadius:14, background:"rgba(251,191,36,.07)", border:"1px solid rgba(251,191,36,.22)", color:"#cbd5e1", fontSize:13, lineHeight:1.45},
+      footerTitle:{fontWeight:900, color:"#fbbf24", marginBottom:4},
+    };
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+  </script>
+</body>
+</html>
