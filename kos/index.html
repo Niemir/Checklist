@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="pl">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>🇬🇷 Kos 2026 — Checklista Dasha & Wanacik</title>
+  <title>🇬🇷 Kos 2026 — Checklista</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
@@ -12,7 +11,7 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body { background:#07111f; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif; color:#e5eefb; }
     button, input { font: inherit; }
-    ::-webkit-scrollbar { width:6px; }
+    ::-webkit-scrollbar { width:6px; height:6px; }
     ::-webkit-scrollbar-track { background:#07111f; }
     ::-webkit-scrollbar-thumb { background:#334155; border-radius:99px; }
   </style>
@@ -33,46 +32,12 @@
       { day:"Nd 14.06", icon:"☀️", hi:28, lo:20, note:"słonecznie" },
     ];
 
-    const COMMON = [
-      { id:"airport", label:"Lotnisko i dokumenty", emoji:"🛂", color:"#60a5fa", items:[
-        "Dowód osobisty albo paszport",
-        "Karty pokładowe offline w telefonie",
-        "Ubezpieczenie + EKUZ, jeśli macie",
-        "Karta płatnicza + trochę euro",
-        "Voucher hotelu / dokumenty z biura",
-        "Telefon naładowany przed wyjściem",
-      ]},
-      { id:"cabin", label:"Kabinowy / plecak", emoji:"🎒", color:"#22c55e", items:[
-        "Dokumenty, telefon, portfel",
-        "Powerbank, ładowarka, słuchawki",
-        "Leki stałe i najważniejsze tabletki",
-        "Jedna bielizna + jedna koszulka",
-        "Strój kąpielowy na start",
-        "Płyny max 100 ml w przezroczystym woreczku",
-        "Pusta butelka na wodę po kontroli",
-      ]},
-      { id:"liquids", label:"Nie do kabinowego", emoji:"🚫", color:"#fb7185", items:[
-        "SPF, szampon i żele powyżej 100 ml",
-        "Nożyczki, żyletki, scyzoryk, korkociąg",
-        "Duży dezodorant spray / duże perfumy",
-        "Powerbank NIE do rejestrowanego",
-      ]},
-      { id:"allinc", label:"All inclusive i hotel", emoji:"🏨", color:"#a78bfa", items:[
-        "Mały plecak na wycieczkę",
-        "Torba plażowa / materiałowa",
-        "Worek na brudną bieliznę",
-        "Woreczki strunowe na mokre rzeczy",
-        "Karty / Kindle / książka",
-        "Opcjonalnie: klipsy do ręczników",
-      ]},
-    ];
-
     const PEOPLE = {
       dasha: {
-        name:"Dasha", icon:"👩", storage:"kos_dasha_2026", custom:"kos_dasha_custom_2026",
+        name:"Dasha", icon:"👩", storage:"kos_dasha_2026_v2", custom:"kos_dasha_custom_2026_v2",
         subtitle:"Kobieta · 7 dni · plaża, basen, kolacje, lekkie zwiedzanie",
         sections:[
-          { id:"registered", label:"Rejestrowany", emoji:"🧳", color:"#38bdf8", items:[
+          { id:"registered", label:"Walizka rejestrowana", emoji:"🧳", color:"#38bdf8", items:[
             "Stroje kąpielowe 2-3",
             "Sukienki / zestawy wieczorne 3-4",
             "Topy / koszulki 5-6",
@@ -82,51 +47,69 @@
             "Skarpetki 3-4 pary",
             "Sandały + wygodne buty",
           ]},
+          { id:"cabin", label:"Plecak / kabinowy", emoji:"🎒", color:"#22c55e", items:[
+            "Dokumenty, telefon, portfel",
+            "Powerbank + ładowarka",
+            "Leki osobiste",
+            "Bielizna + lekka koszulka",
+            "Strój kąpielowy na start",
+            "Mini kosmetyczka do 100 ml",
+            "Okulary przeciwsłoneczne",
+          ]},
           { id:"beach", label:"Plaża i basen", emoji:"🏖️", color:"#06b6d4", items:[
             "Klapki basenowe",
             "Kapelusz / czapka",
-            "Okulary UV",
             "Pareo / narzutka plażowa",
             "Buty do wody, jeśli macie",
+            "Torba plażowa",
           ]},
           { id:"cosmetics", label:"Kosmetyki", emoji:"🧴", color:"#ec4899", items:[
             "SPF 50 twarz + ciało",
             "Balsam po opalaniu / aloes",
             "Demakijaż + lekki makijaż",
             "Szczoteczka, pasta, dezodorant",
-            "Szampon / odżywka do włosów",
+            "Szampon / odżywka",
             "Gumki, spinki, szczotka",
             "Produkty higieniczne na zapas",
           ]},
           { id:"pharmacy", label:"Apteczka", emoji:"💊", color:"#ef4444", items:[
-            "Leki osobiste do kabinowego",
             "Przeciwbólowe / przeciwgorączkowe",
             "Elektrolity",
             "Coś na żołądek i biegunkę",
-            "Plastry + coś po ukąszeniach",
+            "Plastry",
+            "Coś po ukąszeniach",
           ]},
         ],
       },
       wanacik: {
-        name:"Wanacik", icon:"👨", storage:"kos_wanacik_2026", custom:"kos_wanacik_custom_2026",
+        name:"Wanacik", icon:"👨", storage:"kos_wanacik_2026_v2", custom:"kos_wanacik_custom_2026_v2",
         subtitle:"Mężczyzna · 7 dni · plaża, basen, kolacje, lekkie zwiedzanie",
         sections:[
-          { id:"registered", label:"Rejestrowany", emoji:"🧳", color:"#38bdf8", items:[
+          { id:"registered", label:"Walizka rejestrowana", emoji:"🧳", color:"#38bdf8", items:[
             "Kąpielówki 2-3",
             "T-shirty / polo 6-7",
             "Szorty 3-4",
-            "Koszule lniane / polo na kolacje 2-3",
+            "Koszule lniane / polo 2-3",
             "Lekkie długie spodnie 1",
             "Bielizna 8-10 szt.",
             "Skarpetki 4-5 par",
             "Sneakersy + klapki",
           ]},
+          { id:"cabin", label:"Plecak / kabinowy", emoji:"🎒", color:"#22c55e", items:[
+            "Dokumenty, telefon, portfel",
+            "Powerbank + ładowarka",
+            "Leki osobiste",
+            "Bielizna + T-shirt",
+            "Kąpielówki na start",
+            "Słuchawki",
+            "Okulary przeciwsłoneczne",
+          ]},
           { id:"beach", label:"Plaża i basen", emoji:"🏖️", color:"#06b6d4", items:[
             "Klapki basenowe",
             "Czapka z daszkiem",
-            "Okulary UV",
             "Lekka koszulka na słońce",
             "Buty do wody, jeśli macie",
+            "Mały plecak / torba",
           ]},
           { id:"cosmetics", label:"Kosmetyki", emoji:"🧴", color:"#f59e0b", items:[
             "SPF 50 twarz + ciało",
@@ -137,15 +120,58 @@
             "Perfumy małe / atomizer",
           ]},
           { id:"pharmacy", label:"Apteczka", emoji:"💊", color:"#ef4444", items:[
-            "Leki osobiste do kabinowego",
             "Przeciwbólowe / przeciwgorączkowe",
             "Elektrolity",
             "Coś na żołądek i biegunkę",
-            "Plastry + coś po ukąszeniach",
+            "Plastry",
+            "Coś po ukąszeniach",
           ]},
         ],
       }
     };
+
+    const INFO_SECTIONS = [
+      { title:"Pogoda na Kos", icon:"☀️", color:"#f59e0b", lines:[
+        "8-14 czerwca: około 28-30°C w dzień, 20-22°C nocą.",
+        "Bardzo dużo słońca, deszczu raczej nie zakładać.",
+        "Najważniejsze: SPF 50, czapka, okulary i woda.",
+      ]},
+      { title:"Co trzymać przy sobie", icon:"🎒", color:"#22c55e", lines:[
+        "Dokumenty, telefon, portfel, karta pokładowa.",
+        "Leki osobiste, powerbank, ładowarka, słuchawki.",
+        "Jedna zmiana bielizny, koszulka i strój kąpielowy.",
+      ]},
+      { title:"Co lepiej dać do rejestrowanego", icon:"🧳", color:"#38bdf8", lines:[
+        "Duże kosmetyki: SPF, szampon, żel, balsam, perfumy.",
+        "Ostre rzeczy: nożyczki, żyletki, scyzoryk, korkociąg.",
+        "Większość ubrań i dodatkowe buty.",
+      ]},
+      { title:"Płyny w kabinowym", icon:"🧴", color:"#ec4899", lines:[
+        "Pojemniki max 100 ml, razem w przezroczystym woreczku ok. 1 l.",
+        "Krem, żel, pasta, tusz i perfumy też liczą się jako płyny.",
+        "Pełnowymiarowe kosmetyki wrzućcie do walizki rejestrowanej.",
+      ]},
+      { title:"Kontrola bezpieczeństwa", icon:"🛂", color:"#a78bfa", lines:[
+        "Miejcie łatwo dostępne: dokument, boarding pass, płyny, elektronikę.",
+        "Z kieszeni wyjmijcie telefon, klucze, portfel i monety.",
+        "Pustą butelkę napełnijcie dopiero po kontroli.",
+      ]},
+      { title:"W samolocie", icon:"✈️", color:"#60a5fa", lines:[
+        "Pod ręką: woda, słuchawki, bluza, chusteczki, przekąska.",
+        "Na zatkane uszy pomaga guma, cukierek albo picie wody.",
+        "Powerbank zawsze w kabinowym, nie w walizce rejestrowanej.",
+      ]},
+      { title:"Nie pakować niepotrzebnie", icon:"🚫", color:"#fb7185", lines:[
+        "Grube bluzy, kurtki, dużo jeansów i ciężkie buty raczej zbędne.",
+        "Ręczników kąpielowych nie bierzcie, jeśli hotel zapewnia.",
+        "Nie brać drogich rzeczy na plażę ani dużej ilości biżuterii.",
+      ]},
+      { title:"Przed wyjściem z domu", icon:"✅", color:"#84cc16", lines:[
+        "Dokumenty, karty pokładowe, portfele, telefony, leki.",
+        "Powerbank naładowany i w plecaku.",
+        "Sprawdzone limity bagażu, zamknięte okna, wyniesione śmieci.",
+      ]},
+    ];
 
     const load = (key, fallback) => {
       try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; } catch { return fallback; }
@@ -154,34 +180,24 @@
       try { localStorage.setItem(key, JSON.stringify(value)); } catch {}
     };
 
-    function App() {
-      const [active, setActive] = useState("dasha");
-      const person = PEOPLE[active];
-      const [checked, setChecked] = useState(() => load(PEOPLE.dasha.storage, {}));
-      const [custom, setCustom] = useState(() => load(PEOPLE.dasha.custom, {}));
+    function Checklist({ personKey }) {
+      const person = PEOPLE[personKey];
+      const [checked, setChecked] = useState(() => load(person.storage, {}));
+      const [custom, setCustom] = useState(() => load(person.custom, {}));
       const [input, setInput] = useState({});
       const [open, setOpen] = useState({});
       const inputRefs = useRef({});
 
-      useEffect(() => {
-        setChecked(load(person.storage, {}));
-        setCustom(load(person.custom, {}));
-        setInput({});
-      }, [active]);
+      useEffect(() => save(person.storage, checked), [checked]);
+      useEffect(() => save(person.custom, custom), [custom]);
 
-      useEffect(() => save(person.storage, checked), [checked, active]);
-      useEffect(() => save(person.custom, custom), [custom, active]);
-
-      const sections = useMemo(() => {
-        const base = [...person.sections, ...COMMON];
-        return base.map(section => ({
-          ...section,
-          items: [
-            ...section.items.map((text, idx) => ({ id:`${active}_${section.id}_${idx}`, text, custom:false })),
-            ...(custom[section.id] || [])
-          ]
-        }));
-      }, [person, custom, active]);
+      const sections = useMemo(() => person.sections.map(section => ({
+        ...section,
+        items: [
+          ...section.items.map((text, idx) => ({ id:`${personKey}_${section.id}_${idx}`, text, custom:false })),
+          ...(custom[section.id] || [])
+        ]
+      })), [personKey, custom]);
 
       const total = sections.reduce((sum, s) => sum + s.items.length, 0);
       const done = sections.reduce((sum, s) => sum + s.items.filter(i => checked[i.id]).length, 0);
@@ -200,7 +216,7 @@
         if (!text) return;
         setCustom(prev => ({
           ...prev,
-          [sectionId]: [...(prev[sectionId] || []), { id:`custom_${active}_${sectionId}_${Date.now()}`, text, custom:true }]
+          [sectionId]: [...(prev[sectionId] || []), { id:`custom_${personKey}_${sectionId}_${Date.now()}`, text, custom:true }]
         }));
         setInput(prev => ({ ...prev, [sectionId]: "" }));
         setTimeout(() => inputRefs.current[sectionId]?.focus(), 0);
@@ -210,46 +226,18 @@
         setChecked(prev => { const n = { ...prev }; delete n[itemId]; return n; });
       };
 
-      return <main style={S.root}>
-        <header style={S.header}>
-          <div style={S.headerTop}>
-            <div>
-              <div style={S.title}>🇬🇷 Kos 2026</div>
-              <div style={S.sub}>8-15 czerwca · all inclusive · pierwszy lot</div>
-            </div>
-            <div style={S.weatherBadge}>
-              <strong>28-30°C</strong>
-              <span>słońce · noce 20-22°C</span>
-            </div>
+      return <>
+        <section style={S.personRow}>
+          <div>
+            <div style={S.person}>{person.icon} {person.name}</div>
+            <div style={S.personSub}>{person.subtitle}</div>
           </div>
-
-          <div style={S.tabs}>
-            {Object.entries(PEOPLE).map(([key, p]) => <button key={key} onClick={() => setActive(key)} style={{...S.tab, ...(active===key ? S.tabActive : {})}}>{p.icon} {p.name}</button>)}
-          </div>
-
-          <div style={S.personRow}>
-            <div>
-              <div style={S.person}>{person.icon} {person.name}</div>
-              <div style={S.personSub}>{person.subtitle}</div>
-            </div>
-            <button onClick={reset} style={S.reset}>Reset</button>
-          </div>
-
-          <div style={S.progressRow}>
-            <span>Spakowane: {done}/{total}</span><strong>{pct}%</strong>
-          </div>
-          <div style={S.progress}><div style={{...S.progressFill, width:`${pct}%`, background:pct===100 ? "#22c55e" : "linear-gradient(90deg,#38bdf8,#818cf8)"}} /></div>
-        </header>
-
-        <section style={S.weatherStrip}>
-          {WEATHER.map((d, i) => <div key={i} style={S.wCard}>
-            <div style={S.wDay}>{d.day}</div><div style={S.wIcon}>{d.icon}</div>
-            <div style={S.wTemp}>{d.hi}°/{d.lo}°</div><div style={S.wNote}>{d.note}</div>
-          </div>)}
+          <button onClick={reset} style={S.reset}>Reset</button>
         </section>
 
-        <section style={S.infoBox}>
-          <strong>Najkrócej:</strong> duży SPF, czapka, okulary i lekkie ubrania. Do kabinowego dokumenty, leki, elektronika, powerbank i zapas na 1 dzień. Duże płyny i ostre rzeczy do rejestrowanego.
+        <section style={S.progressWrap}>
+          <div style={S.progressRow}><span>Spakowane: {done}/{total}</span><strong>{pct}%</strong></div>
+          <div style={S.progress}><div style={{...S.progressFill, width:`${pct}%`, background:pct===100 ? "#22c55e" : "linear-gradient(90deg,#38bdf8,#818cf8)"}} /></div>
         </section>
 
         <section style={S.content}>
@@ -282,13 +270,59 @@
             </div>
           })}
         </section>
+      </>;
+    }
 
-        <section style={S.footerBox}>
-          <div style={S.footerTitle}>✅ Przed wyjściem z domu</div>
-          <p>Dokumenty, karty pokładowe, telefony, portfele, leki, powerbank, zamknięte okna, śmieci wyniesione, sprawdzony limit bagażu.</p>
-          <div style={{...S.footerTitle, marginTop:12}}>✈️ Must-have na lotnisko</div>
-          <p>Dokument, boarding pass, telefon, portfel, płyny 100 ml w woreczku, leki, powerbank, słuchawki, pusta butelka na wodę.</p>
+    function InfoTab() {
+      return <>
+        <section style={S.weatherStrip}>
+          {WEATHER.map((d, i) => <div key={i} style={S.wCard}>
+            <div style={S.wDay}>{d.day}</div><div style={S.wIcon}>{d.icon}</div>
+            <div style={S.wTemp}>{d.hi}°/{d.lo}°</div><div style={S.wNote}>{d.note}</div>
+          </div>)}
         </section>
+
+        <section style={S.infoLead}>
+          <strong>W skrócie:</strong> bardzo ciepło i słonecznie. Pakujcie lekko, ale nie oszczędzajcie miejsca na SPF 50, czapkę, okulary i wygodne buty.
+        </section>
+
+        <section style={S.content}>
+          {INFO_SECTIONS.map(section => <div key={section.title} style={S.infoCard}>
+            <div style={{...S.infoHead, borderLeft:`4px solid ${section.color}`}}>
+              <span style={S.emoji}>{section.icon}</span>
+              <strong>{section.title}</strong>
+            </div>
+            <ul style={S.infoList}>
+              {section.lines.map(line => <li key={line}>{line}</li>)}
+            </ul>
+          </div>)}
+        </section>
+      </>;
+    }
+
+    function App() {
+      const [active, setActive] = useState("info");
+      return <main style={S.root}>
+        <header style={S.header}>
+          <div style={S.headerTop}>
+            <div>
+              <div style={S.title}>🇬🇷 Kos 2026</div>
+              <div style={S.sub}>8-15 czerwca · all inclusive · pierwszy lot</div>
+            </div>
+            <div style={S.weatherBadge}>
+              <strong>28-30°C</strong>
+              <span>słońce · noce 20-22°C</span>
+            </div>
+          </div>
+
+          <div style={S.tabs}>
+            <button onClick={() => setActive("info")} style={{...S.tab, ...(active==="info" ? S.tabActive : {})}}>ℹ️ Informacje</button>
+            <button onClick={() => setActive("dasha")} style={{...S.tab, ...(active==="dasha" ? S.tabActive : {})}}>👩 Dasha</button>
+            <button onClick={() => setActive("wanacik")} style={{...S.tab, ...(active==="wanacik" ? S.tabActive : {})}}>👨 Wanacik</button>
+          </div>
+        </header>
+
+        {active === "info" ? <InfoTab /> : <Checklist personKey={active} />}
       </main>;
     }
 
@@ -296,36 +330,49 @@
       root:{maxWidth:720, margin:"0 auto", minHeight:"100vh", background:"#07111f", paddingBottom:40},
       header:{background:"linear-gradient(160deg,#0f172a,#172554)", padding:"22px 16px 16px", borderBottom:"1px solid #1e293b"},
       headerTop:{display:"flex", justifyContent:"space-between", gap:12, alignItems:"flex-start", marginBottom:16},
-      title:{fontSize:25, fontWeight:800, letterSpacing:"-0.6px"}, sub:{fontSize:13, color:"#94a3b8", marginTop:3},
-      weatherBadge:{textAlign:"right", border:"1px solid rgba(56,189,248,.35)", background:"rgba(56,189,248,.1)", borderRadius:14, padding:"9px 12px", minWidth:120},
-      weatherBadge:{textAlign:"right", border:"1px solid rgba(56,189,248,.35)", background:"rgba(56,189,248,.1)", borderRadius:14, padding:"9px 12px", minWidth:120},
-      weatherBadgeStrong:{display:"block"},
-      tabs:{display:"grid", gridTemplateColumns:"1fr 1fr", gap:8, marginBottom:14},
-      tab:{border:"1px solid #334155", background:"#0f172a", color:"#94a3b8", borderRadius:12, padding:"10px 12px", cursor:"pointer", fontWeight:700},
+      title:{fontSize:25, fontWeight:800, letterSpacing:"-0.6px"},
+      sub:{fontSize:13, color:"#94a3b8", marginTop:3},
+      weatherBadge:{textAlign:"right", border:"1px solid rgba(56,189,248,.35)", background:"rgba(56,189,248,.1)", borderRadius:14, padding:"9px 12px", minWidth:120, fontSize:12, color:"#94a3b8"},
+      tabs:{display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:8},
+      tab:{border:"1px solid #334155", background:"#0f172a", color:"#94a3b8", borderRadius:12, padding:"10px 8px", cursor:"pointer", fontWeight:800, fontSize:13},
       tabActive:{background:"#e5eefb", color:"#0f172a", borderColor:"#e5eefb"},
-      personRow:{display:"flex", justifyContent:"space-between", alignItems:"center", gap:12, marginBottom:12},
-      person:{fontSize:18, fontWeight:800}, personSub:{fontSize:12.5, color:"#94a3b8", marginTop:2},
+      personRow:{display:"flex", justifyContent:"space-between", alignItems:"center", gap:12, padding:"16px 12px 8px"},
+      person:{fontSize:18, fontWeight:800},
+      personSub:{fontSize:12.5, color:"#94a3b8", marginTop:2},
       reset:{background:"transparent", color:"#94a3b8", border:"1px solid #334155", borderRadius:10, padding:"7px 10px", cursor:"pointer", fontSize:12},
+      progressWrap:{padding:"0 12px 12px"},
       progressRow:{display:"flex", justifyContent:"space-between", fontSize:12, color:"#94a3b8", marginBottom:7},
-      progress:{height:7, background:"#1e293b", borderRadius:999, overflow:"hidden"}, progressFill:{height:"100%", transition:"width .25s ease"},
+      progress:{height:7, background:"#1e293b", borderRadius:999, overflow:"hidden"},
+      progressFill:{height:"100%", transition:"width .25s ease"},
       weatherStrip:{display:"grid", gridTemplateColumns:"repeat(7, minmax(78px,1fr))", gap:8, overflowX:"auto", padding:"14px 12px 6px"},
       wCard:{background:"#0f172a", border:"1px solid #1e293b", borderRadius:12, padding:"10px 8px", textAlign:"center", minWidth:78},
-      wDay:{fontSize:10.5, color:"#94a3b8", fontWeight:700}, wIcon:{fontSize:22, margin:"5px 0"}, wTemp:{fontSize:13, fontWeight:800}, wNote:{fontSize:10, color:"#94a3b8", marginTop:3},
-      infoBox:{margin:"10px 12px", padding:"12px 13px", borderRadius:14, background:"rgba(34,197,94,.08)", border:"1px solid rgba(34,197,94,.22)", color:"#cbd5e1", fontSize:13, lineHeight:1.45},
+      wDay:{fontSize:10.5, color:"#94a3b8", fontWeight:700},
+      wIcon:{fontSize:22, margin:"5px 0"},
+      wTemp:{fontSize:13, fontWeight:800},
+      wNote:{fontSize:10, color:"#94a3b8", marginTop:3},
+      infoLead:{margin:"10px 12px", padding:"12px 13px", borderRadius:14, background:"rgba(34,197,94,.08)", border:"1px solid rgba(34,197,94,.22)", color:"#cbd5e1", fontSize:13, lineHeight:1.45},
       content:{padding:"4px 12px 0"},
       section:{background:"#0f172a", border:"1px solid #1e293b", borderRadius:14, overflow:"hidden", marginBottom:10},
       sectionHeader:{display:"flex", alignItems:"center", justifyContent:"space-between", gap:10, padding:"12px 12px", cursor:"pointer"},
-      sectionTitleWrap:{display:"flex", alignItems:"center", gap:10}, emoji:{fontSize:20}, sectionTitle:{fontWeight:800, fontSize:14.5}, count:{fontSize:11.5, color:"#64748b", marginTop:1},
-      sectionActions:{display:"flex", alignItems:"center", gap:10}, markBtn:{background:"transparent", border:0, fontSize:11.5, fontWeight:800, cursor:"pointer"}, chev:{fontSize:10, color:"#64748b"},
+      sectionTitleWrap:{display:"flex", alignItems:"center", gap:10},
+      emoji:{fontSize:20},
+      sectionTitle:{fontWeight:800, fontSize:14.5},
+      count:{fontSize:11.5, color:"#64748b", marginTop:1},
+      sectionActions:{display:"flex", alignItems:"center", gap:10},
+      markBtn:{background:"transparent", border:0, fontSize:11.5, fontWeight:800, cursor:"pointer"},
+      chev:{fontSize:10, color:"#64748b"},
       items:{borderTop:"1px solid #1e293b", padding:"4px 12px 9px"},
       item:{display:"flex", alignItems:"center", gap:9, padding:"7px 0", minHeight:34},
       box:{width:20, height:20, borderRadius:6, border:"1.5px solid #334155", color:"white", fontSize:12, fontWeight:900, display:"flex", alignItems:"center", justifyContent:"center", cursor:"pointer", flexShrink:0},
-      itemText:{fontSize:13.5, lineHeight:1.35, color:"#dbe7f5", cursor:"pointer", flex:1}, itemDone:{textDecoration:"line-through", color:"#64748b"},
+      itemText:{fontSize:13.5, lineHeight:1.35, color:"#dbe7f5", cursor:"pointer", flex:1},
+      itemDone:{textDecoration:"line-through", color:"#64748b"},
       remove:{background:"transparent", border:0, color:"#64748b", fontSize:20, cursor:"pointer", padding:"0 4px"},
-      addRow:{display:"flex", gap:8, paddingTop:8}, input:{flex:1, minWidth:0, background:"#07111f", color:"#e5eefb", border:"1px solid #1e293b", borderRadius:10, padding:"8px 10px", outline:"none"},
+      addRow:{display:"flex", gap:8, paddingTop:8},
+      input:{flex:1, minWidth:0, background:"#07111f", color:"#e5eefb", border:"1px solid #1e293b", borderRadius:10, padding:"8px 10px", outline:"none"},
       addBtn:{border:0, color:"white", borderRadius:10, padding:"8px 10px", fontWeight:800, cursor:"pointer"},
-      footerBox:{margin:"12px", padding:"14px", borderRadius:14, background:"rgba(251,191,36,.07)", border:"1px solid rgba(251,191,36,.22)", color:"#cbd5e1", fontSize:13, lineHeight:1.45},
-      footerTitle:{fontWeight:900, color:"#fbbf24", marginBottom:4},
+      infoCard:{background:"#0f172a", border:"1px solid #1e293b", borderRadius:14, overflow:"hidden", marginBottom:10},
+      infoHead:{display:"flex", alignItems:"center", gap:10, padding:"12px", fontSize:14.5},
+      infoList:{padding:"0 16px 13px 39px", color:"#cbd5e1", fontSize:13.2, lineHeight:1.55},
     };
 
     ReactDOM.createRoot(document.getElementById("root")).render(<App />);
