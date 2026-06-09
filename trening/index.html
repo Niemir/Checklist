@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f1419">
+<title>Atletyczna Baza — dziennik treningowy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..100,400..900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0f1419; --surface:#161d24; --surface2:#1e2832; --line:#2a3744;
+  --text:#e9eff4; --muted:#8da0ae; --faint:#5b6c79;
+  --accent:#ffb454; --accent-deep:#d98a26;
+  --ok:#6fcf8e; --warn:#e8746a;
+  --b-zolta:#f0d04a; --b-czerwona:#e8604a; --b-czarna:#46535f; --b-fioletowa:#9a6df2;
+  --r:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{font-size:16px}
+body{
+  background:var(--bg); color:var(--text);
+  font-family:'Archivo',system-ui,sans-serif;
+  font-variation-settings:'wdth' 92;
+  min-height:100dvh; max-width:580px; margin:0 auto;
+  padding-bottom:calc(76px + env(safe-area-inset-bottom));
+}
+.mono{font-family:'JetBrains Mono',monospace}
+header.app{
+  padding:18px 18px 10px; display:flex; align-items:flex-end; justify-content:space-between;
+}
+header.app h1{
+  font-size:1.35rem; font-weight:900; letter-spacing:.02em; text-transform:uppercase;
+  font-variation-settings:'wdth' 78; line-height:1;
+}
+header.app h1 span{color:var(--accent)}
+header.app .date{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--muted)}
+.banner{
+  margin:0 18px 10px;padding:10px 12px;border:1px solid var(--warn);border-radius:10px;
+  color:var(--warn);font-size:.8rem;line-height:1.4;display:none;
+}
+.banner.show{display:block}
+main{padding:0 18px}
+.view{display:none}
+.view.active{display:block;animation:fadein .18s ease}
+@keyframes fadein{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+
+/* ---- nav ---- */
+nav{
+  position:fixed;bottom:0;left:50%;transform:translateX(-50%);
+  width:100%;max-width:580px;background:rgba(15,20,25,.92);backdrop-filter:blur(12px);
+  border-top:1px solid var(--line);display:flex;
+  padding:8px 6px calc(8px + env(safe-area-inset-bottom));z-index:50;
+}
+nav button{
+  flex:1;background:none;border:none;color:var(--faint);font-family:inherit;
+  font-size:.62rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;
+  display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;padding:4px 0;
+}
+nav button svg{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+nav button.on{color:var(--accent)}
+
+/* ---- cards / generic ---- */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px;margin-bottom:12px}
+.card.tap{cursor:pointer;transition:border-color .15s}
+.card.tap:active{border-color:var(--accent)}
+h2.sec{font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:20px 0 10px}
+.row{display:flex;align-items:center;gap:10px}
+.grow{flex:1}
+.chip{
+  display:inline-flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;
+  font-size:.68rem;font-weight:500;color:var(--muted);
+  border:1px solid var(--line);border-radius:99px;padding:3px 9px;
+}
+.chip.accent{color:var(--accent);border-color:rgba(255,180,84,.4)}
+.btn{
+  font-family:inherit;font-weight:700;font-size:.85rem;border-radius:12px;cursor:pointer;
+  padding:12px 16px;border:1px solid var(--line);background:var(--surface2);color:var(--text);
+  letter-spacing:.02em;
+}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#1a1206}
+.btn.ghost{background:none}
+.btn.danger{color:var(--warn);border-color:rgba(232,116,106,.4);background:none}
+.btn.small{padding:7px 12px;font-size:.75rem;border-radius:9px}
+.btn:disabled{opacity:.4;cursor:default}
+.wfull{width:100%}
+
+/* ---- workout picker ---- */
+.wk-pick .card{display:flex;align-items:center;gap:14px}
+.wk-letter{
+  width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+  font-weight:900;font-size:1.25rem;background:var(--surface2);color:var(--accent);
+  font-variation-settings:'wdth' 78;flex-shrink:0;
+}
+.wk-pick .meta{flex:1}
+.wk-pick .meta b{display:block;font-size:.95rem;font-weight:700}
+.wk-pick .meta span{font-size:.74rem;color:var(--muted)}
+.suggest{font-size:.78rem;color:var(--muted);margin-bottom:10px}
+.suggest b{color:var(--accent)}
+
+/* ---- active workout ---- */
+.session-head{display:flex;align-items:center;justify-content:space-between;margin:6px 0 12px}
+.session-head h2{font-size:1.05rem;font-weight:800;font-variation-settings:'wdth' 80;text-transform:uppercase;letter-spacing:.02em}
+.timerbar{display:flex;gap:8px;align-items:center;margin-bottom:14px}
+.timerbar .tdisp{
+  font-family:'JetBrains Mono',monospace;font-weight:700;font-size:1.05rem;min-width:64px;text-align:center;
+  color:var(--faint);
+}
+.timerbar .tdisp.run{color:var(--accent)}
+.ex-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);margin-bottom:12px;overflow:hidden}
+.ex-card.done{border-color:rgba(111,207,142,.45)}
+.ex-head{padding:13px 14px 10px}
+.ex-head .name{font-weight:700;font-size:.95rem}
+.ex-head .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px}
+.tempo{font-family:'JetBrains Mono',monospace;font-size:.66rem;color:var(--accent);border:1px solid rgba(255,180,84,.35);border-radius:6px;padding:2px 7px;letter-spacing:.08em}
+.howbtn{
+  background:none;border:none;color:var(--muted);font-family:inherit;font-size:.72rem;font-weight:600;
+  cursor:pointer;padding:0;text-decoration:underline;text-underline-offset:3px;
+}
+.sets{padding:4px 14px 12px;display:flex;flex-direction:column;gap:8px}
+.setrow{display:flex;align-items:center;gap:8px}
+.setrow .idx{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--faint);width:16px}
+.stepper{display:flex;align-items:center;border:1px solid var(--line);border-radius:10px;background:var(--surface2)}
+.stepper button{
+  width:38px;height:38px;background:none;border:none;color:var(--text);font-size:1.15rem;cursor:pointer;font-family:inherit;
+}
+.stepper input{
+  width:44px;height:38px;background:none;border:none;border-left:1px solid var(--line);border-right:1px solid var(--line);
+  color:var(--text);font-family:'JetBrains Mono',monospace;font-weight:700;font-size:.95rem;text-align:center;outline:none;
+}
+.unit{font-size:.68rem;color:var(--faint);width:30px}
+.bandsel{display:flex;gap:5px;margin-left:auto}
+.bdot{
+  width:24px;height:24px;border-radius:50%;border:2px solid var(--line);cursor:pointer;position:relative;background:var(--surface2);
+}
+.bdot.on{border-color:var(--text);box-shadow:0 0 0 2px var(--bg),0 0 0 3.5px var(--accent)}
+.delset{background:none;border:none;color:var(--faint);cursor:pointer;font-size:1rem;padding:4px}
+.addset{align-self:flex-start}
+.exnote{
+  width:100%;background:var(--surface2);border:1px solid var(--line);border-radius:9px;color:var(--text);
+  font-family:inherit;font-size:.78rem;padding:8px 10px;outline:none;
+}
+.exnote::placeholder{color:var(--faint)}
+.finish-box{margin:18px 0 30px}
+.feel{display:flex;gap:8px;margin:10px 0 14px}
+.feel button{
+  flex:1;background:var(--surface2);border:1px solid var(--line);border-radius:10px;color:var(--muted);
+  font-family:inherit;font-size:.78rem;font-weight:600;padding:10px 4px;cursor:pointer;
+}
+.feel button.on{border-color:var(--accent);color:var(--accent)}
+
+/* ---- how-to panel ---- */
+.howto{border-top:1px dashed var(--line);padding:12px 14px;background:rgba(255,255,255,.015)}
+.animbox{
+  background:var(--surface2);border-radius:10px;padding:6px;margin-bottom:10px;
+  display:flex;justify-content:center;
+}
+.animbox svg{width:100%;max-width:320px;height:auto;color:var(--text)}
+.howto ol{padding-left:18px;display:flex;flex-direction:column;gap:5px;font-size:.8rem;line-height:1.45;color:var(--text)}
+.howto .cues{margin-top:10px;font-size:.76rem;color:var(--muted);line-height:1.5}
+.howto .cues b{color:var(--accent);font-weight:700}
+.youbox{
+  margin-top:10px;border-left:3px solid var(--accent);padding:6px 10px;font-size:.76rem;color:var(--text);
+  background:rgba(255,180,84,.06);border-radius:0 8px 8px 0;line-height:1.5;
+}
+
+/* ---- history ---- */
+.h-day{margin-bottom:14px}
+.h-sess .top{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.h-sess .top .wk-letter{width:34px;height:34px;font-size:.95rem;border-radius:9px}
+.h-sess .top b{font-size:.88rem}
+.h-sess .top time{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--muted);display:block}
+.h-lines{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--muted);line-height:1.7}
+.h-lines b{color:var(--text);font-weight:500}
+.empty{
+  text-align:center;color:var(--muted);font-size:.84rem;line-height:1.6;padding:40px 20px;
+}
+.empty .big{font-size:1.6rem;display:block;margin-bottom:8px}
+
+/* ---- progress ---- */
+.tiles{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:4px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 10px;text-align:center}
+.tile .v{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:1.3rem;color:var(--accent)}
+.tile .l{font-size:.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-top:3px}
+select.exsel{
+  width:100%;background:var(--surface2);border:1px solid var(--line);border-radius:10px;color:var(--text);
+  font-family:inherit;font-size:.85rem;padding:10px 12px;outline:none;appearance:none;margin-bottom:10px;
+}
+.chart{width:100%;height:auto}
+.chart .axis{font-family:'JetBrains Mono',monospace;font-size:9px;fill:var(--faint)}
+.testtable{width:100%;border-collapse:collapse;font-size:.78rem}
+.testtable th{font-size:.62rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);text-align:left;padding:6px 4px;border-bottom:1px solid var(--line);font-weight:600}
+.testtable td{padding:8px 4px;border-bottom:1px solid var(--line);font-family:'JetBrains Mono',monospace;font-size:.76rem}
+.delta{font-size:.62rem;margin-left:4px}
+.delta.up{color:var(--ok)} .delta.dn{color:var(--warn)}
+
+/* ---- atlas ---- */
+.atlas-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.atlas-grid .card{margin:0;padding:12px}
+.atlas-grid .card b{font-size:.82rem;display:block;line-height:1.3}
+.atlas-grid .card span{font-size:.66rem;color:var(--muted);display:block;margin-top:4px}
+.overlay{
+  position:fixed;inset:0;background:rgba(10,13,17,.7);backdrop-filter:blur(3px);z-index:90;display:none;
+}
+.overlay.show{display:block}
+.sheet{
+  position:fixed;left:50%;transform:translateX(-50%);bottom:0;width:100%;max-width:580px;
+  max-height:88dvh;overflow-y:auto;background:var(--surface);border:1px solid var(--line);border-bottom:none;
+  border-radius:20px 20px 0 0;z-index:95;padding:18px 18px calc(24px + env(safe-area-inset-bottom));
+  display:none;
+}
+.sheet.show{display:block;animation:up .22s ease}
+@keyframes up{from{transform:translate(-50%,40px);opacity:0}to{transform:translate(-50%,0);opacity:1}}
+.sheet .close{position:sticky;top:0;float:right;background:var(--surface2);border:1px solid var(--line);border-radius:99px;width:32px;height:32px;color:var(--text);font-size:1rem;cursor:pointer}
+.sheet h3{font-size:1.05rem;font-weight:800;margin-bottom:10px;font-variation-settings:'wdth' 82}
+
+/* ---- plan tab ---- */
+.plan p{font-size:.84rem;line-height:1.6;color:var(--text);margin-bottom:10px}
+.plan p.mut{color:var(--muted);font-size:.78rem}
+.plan ul{padding-left:18px;font-size:.82rem;line-height:1.7;color:var(--text);margin-bottom:10px}
+.plan .wkday{display:flex;gap:10px;padding:7px 0;border-bottom:1px solid var(--line);font-size:.82rem;align-items:baseline}
+.plan .wkday:last-child{border:none}
+.plan .wkday .d{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--accent);width:64px;flex-shrink:0}
+.plan .wkday .t{color:var(--muted);margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:.68rem}
+.testform .frow{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.testform .frow label{flex:1;font-size:.82rem}
+.testform .frow input{
+  width:86px;background:var(--surface2);border:1px solid var(--line);border-radius:9px;color:var(--text);
+  font-family:'JetBrains Mono',monospace;font-size:.9rem;padding:9px 10px;text-align:center;outline:none;
+}
+input[type=file]{display:none}
+.iconln{display:inline-block;vertical-align:-3px;margin-right:6px}
+</style>
+</head>
+<body>
+<header class="app">
+  <h1>Atletyczna<br><span>Baza</span></h1>
+  <div class="date mono" id="hdrDate"></div>
+</header>
+<div class="banner" id="storeBanner">Tryb podglądu — zapis danych niedostępny w tym oknie. Otwórz plik bezpośrednio w przeglądarce lub wrzuć na GitHub Pages, żeby dziennik zapisywał się na stałe.</div>
+<main>
+  <div class="view" id="view-trening"></div>
+  <div class="view" id="view-historia"></div>
+  <div class="view" id="view-postepy"></div>
+  <div class="view" id="view-atlas"></div>
+  <div class="view" id="view-plan"></div>
+</main>
+<div class="overlay" id="overlay"></div>
+<div class="sheet" id="sheet"></div>
+<nav id="nav"></nav>
+<script>
+/* ================= DANE ================= */
+const BANDS=[
+  {id:'zolta',label:'żółta · lekka',color:'var(--b-zolta)'},
+  {id:'czerwona',label:'czerwona · średnia',color:'var(--b-czerwona)'},
+  {id:'czarna',label:'czarna · mocna',color:'var(--b-czarna)'},
+  {id:'fioletowa',label:'fioletowa · b. mocna',color:'var(--b-fioletowa)'},
+];
+const BMAP=Object.fromEntries(BANDS.map(b=>[b.id,b]));
+
+const EX={
+  pompki:{name:'Pompki na uchwytach',mode:'reps',band:'opc',tempo:'3·1·1',anim:null,cat:'Push',
+    steps:['Uchwyty pod barkami, chwyt młotkowy (neutralny).','Spięty brzuch i pośladki — ciało jak deska, bez zapadania lędźwi.','3 sekundy w dół, łokcie ~45° od tułowia.','Sekunda pauzy nisko, dynamicznie w górę. Nie domykaj łokci na górze.'],
+    cues:'<b>Hipermobilność:</b> góra ruchu = łokcie "miękkie", napięcie zostaje w klatce i tricepsie.',
+    you:'Zawsze na uchwytach — neutralny chwyt odciąża nadgarstek i ganglion. Ból >3/10 → przerwij.',
+    err:['Zapadnięte biodra','Łokcie szeroko na boki','Skracanie zakresu przy zmęczeniu']},
+  pike:{name:'Pike push-up na uchwytach',mode:'reps',band:false,tempo:'2·1·1',anim:'pike',cat:'Push',
+    steps:['Pozycja "góry" — biodra wysoko, ręce na uchwytach, nogi możliwie proste.','Zegnij łokcie i prowadź czubek głowy do podłogi między uchwyty.','Pauza nad ziemią, wypchnij się barkami w górę.','Im bliżej rąk stopy, tym trudniej — reguluj progresję.'],
+    cues:'<b>Cel:</b> barki bez sprzętu. To Twój substytut wyciskania nad głowę.',
+    you:'Uchwyty obowiązkowo. Patrz na stopy, nie przed siebie — chroni kark.',
+    err:['Łamanie w biodrach zamiast pracy barków','Głowa wystrzelona do przodu']},
+  ohp:{name:'Wyciskanie gumy nad głowę',mode:'reps',band:'opor',tempo:'2·0·1',anim:null,cat:'Push',
+    steps:['Stań na gumie (lub klęk jednonóż), chwyt na wysokości barków.','Żebra w dół, brzuch spięty — nie odchylaj się do tyłu.','Wyciśnij nad głowę do prawie pełnego wyprostu, 2 s kontrolowanego zejścia.'],
+    cues:'<b>Klucz:</b> jeśli lędźwie się wyginają — guma za mocna albo brak napięcia brzucha.',
+    you:'Nie blokuj łokci na górze (hipermobilność).',
+    err:['Odchylanie tułowia','Wyciskanie przed głowę zamiast nad nią']},
+  deadbug:{name:'Dead bug',mode:'reps_side',band:false,tempo:'wolno',anim:'deadbug',cat:'Core',
+    steps:['Połóż się na plecach, ręce pionowo nad barkami, nogi zgięte 90/90.','WCIŚNIJ lędźwie w matę — to fundament całego ćwiczenia.','Powoli opuść prawą rękę za głowę i jednocześnie wyprostuj lewą nogę nisko nad podłogą.','Wróć i zmień stronę. Lędźwie ani na moment nie odrywają się od maty.'],
+    cues:'<b>Test:</b> jeśli czujesz, że lędźwie chcą się unieść — skróć zakres (noga wyżej nad podłogą). Wydech przy prostowaniu.',
+    you:'To Twoje ćwiczenie nr 1 na lędźwie. Jakość > liczba powtórzeń.',
+    err:['Odrywanie lędźwi od maty','Za szybkie tempo','Wstrzymywanie oddechu']},
+  plank:{name:'Plank na przedramionach',mode:'time',band:false,tempo:'izometria',anim:null,cat:'Core',
+    steps:['Podpór na przedramionach, łokcie pod barkami.','Napnij pośladki i brzuch, miednica lekko podwinięta.','Ciało w linii prostej — głowa przedłużeniem kręgosłupa.'],
+    cues:'<b>Zasada:</b> lepsze 30 s idealne niż 60 s z zapadniętymi biodrami.',
+    you:'Przedramiona = zero obciążenia nadgarstka. Jeśli kiedyś znudzi się — zamień na plank z dotknięciem barku.',
+    err:['Biodra za wysoko lub zapadnięte','Głowa zwisająca w dół']},
+  pullup:{name:'Podciąganie nachwytem',mode:'reps',band:'asysta',tempo:'1·1·3',anim:null,cat:'Pull',
+    steps:['Zwis na drążku, chwyt nieco szerzej niż barki.','Start od ściągnięcia łopatek w dół (bez zginania rąk).','Podciągnij brodę nad drążek, 1 s pauzy.','3 sekundy kontrolowanego zejścia — to tam rośnie siła.'],
+    cues:'<b>Poniżej 5 powtórzeń?</b> Rób negatywy (wskocz na górę, 5 s zejścia) albo zaczep gumę o drążek jako asystę — zapisuj wtedy kolor gumy.',
+    you:'Nie wisaj biernie na samych stawach na dole (hipermobilność) — utrzymuj minimalne napięcie łopatek.',
+    err:['Bujanie i kipping','Zwis bierny na dole','Połowa zakresu na górze']},
+  row:{name:'Wiosłowanie gumą siedząc',mode:'reps',band:'opor',tempo:'2·1·2',anim:'row',cat:'Pull',
+    steps:['Usiądź, nogi wyprostowane, guma zaczepiona o stopy.','Plecy proste, klatka otwarta.','Ciągnij łokcie wzdłuż tułowia do żeber, ściągnij łopatki, 1 s pauzy.','2 s kontrolowanego powrotu — nie pozwól gumie Cię szarpnąć.'],
+    cues:'<b>Czuj:</b> środek pleców między łopatkami, nie biceps.',
+    err:['Garbienie się przy powrocie','Szarpanie tułowiem','Barki uciekają do uszu']},
+  facepull:{name:'Face pull z gumą',mode:'reps',band:'opor',tempo:'2·1·2',anim:'facepull',cat:'Postawa',
+    steps:['Zaczep gumę na wysokości twarzy (klamka, drążek).','Ciągnij końce gumy do twarzy, łokcie szeroko i wysoko.','Na końcu ruchu rozchyl dłonie jak do "double biceps", 1 s pauzy.','Powoli wróć.'],
+    cues:'<b>To lekarstwo</b> na zaokrąglone barki i wysuniętą głowę. Lekka guma, perfekcyjna technika.',
+    you:'Najważniejsze ćwiczenie dla Twojej postawy po 10 h przy biurku.',
+    err:['Za mocna guma','Łokcie nisko (robi się z tego wiosłowanie)','Odchylanie tułowia']},
+  pullapart:{name:'Band pull-apart',mode:'reps',band:'opor',tempo:'2·1·2',anim:'pullapart',cat:'Postawa',
+    steps:['Trzymaj gumę przed sobą na szerokość barków, ręce proste na wysokości klatki.','Rozciągnij gumę na boki aż dotknie klatki — łopatki ściągnięte.','1 s pauzy, wolny powrót.'],
+    cues:'<b>Bonus:</b> rób 1 serię w przerwie w pracy. Kark podziękuje.',
+    err:['Wzruszanie barkami','Zginanie łokci','Za szybki powrót']},
+  birddog:{name:'Bird dog',mode:'reps_side',band:false,tempo:'pauza 2 s',anim:'birddog',cat:'Core',
+    steps:['Klęk podparty: dłonie pod barkami (lub pięści/uchwyty), kolana pod biodrami.','Napnij brzuch — wyobraź sobie szklankę wody na lędźwiach.','Jednocześnie wyprostuj prawą rękę w przód i lewą nogę w tył, do poziomu.','2 s pauzy bez rotacji miednicy, wróć powoli, zmień stronę.'],
+    cues:'<b>Test szklanki:</b> biodra równolegle do podłogi przez cały ruch. Noga nie wyżej niż tułów.',
+    you:'Podpór na pięściach albo uchwytach — nadgarstek neutralny. Drugie kluczowe ćwiczenie dla Twoich lędźwi.',
+    err:['Rotacja miednicy','Przeprost lędźwi przy unoszeniu nogi','Zadzieranie głowy']},
+  bridge:{name:'Glute bridge',mode:'reps',band:false,tempo:'1·2·2',anim:'bridge',cat:'Nogi',
+    steps:['Połóż się na plecach, stopy blisko pośladków na szerokość bioder.','Wypchnij biodra w górę SIŁĄ POŚLADKÓW, nie lędźwi.','Na górze linia barki–biodra–kolana, 2 s mocnego spięcia pośladków.','Powoli opuść, nie kładź bioder w pełni między powtórzeniami.'],
+    cues:'<b>Czuj pośladki, nie lędźwie.</b> Jeśli czujesz lędźwie — podwiń lekko miednicę i zmniejsz zakres.',
+    you:'Blok 2: wersja jednonóż. Silne pośladki = mniej bólu lędźwi przy siedzącej pracy.',
+    err:['Przeprost lędźwi na górze','Odpychanie się palcami zamiast piętami']},
+  splitsquat:{name:'Split squat',mode:'reps_side',band:'opc',tempo:'3·1·1',anim:'splitsquat',cat:'Nogi',
+    steps:['Duży wykrok — stopy na szerokość bioder, ciężar na przedniej pięcie.','3 s schodzenia: tylne kolano pionowo w dół, tuż nad podłogę.','Tułów pionowo, 1 s pauzy nisko.','Wstań przez przednią piętę. Cała seria na jedną nogę, potem zmiana.'],
+    cues:'<b>Tempo robi robotę</b> — przy 3 s zejścia masa ciała w zupełności wystarczy.',
+    you:'Nie pogłębiaj na siłę (hipermobilność) — kolano przedniej nogi stabilnie nad stopą, bez uciekania do środka.',
+    err:['Za krótki wykrok','Kolano ucieka do środka','Tułów pochylony do przodu']},
+  slrdl:{name:'Single-leg RDL',mode:'reps_side',band:'opc',tempo:'3·1·1',anim:'slrdl',cat:'Nogi',
+    steps:['Stań na lekko ugiętej nodze, druga luźno obok.','Pochyl tułów w przód ZAWIASEM w biodrze, wolna noga prostuje się w tył.','Plecy proste, biodra równolegle do podłogi — schodź 3 s do poziomu tułowia.','Wróć siłą pośladka i tylnej taśmy nogi.'],
+    cues:'<b>Chwiejesz się?</b> To jest cel — uczysz stabilizacji. Możesz dotykać ściany palcem dla asekuracji.',
+    you:'Idealne dla Ciebie: stabilizacja + kontrola zamiast mobilności, której masz aż nadto. Nie przeprostowuj kolana nogi podporowej.',
+    err:['Zaokrąglone plecy','Otwieranie biodra do boku','Zablokowane kolano podporowe']},
+  chinup:{name:'Podciąganie podchwytem',mode:'reps',band:'asysta',tempo:'1·1·3',anim:null,cat:'Pull',
+    steps:['Chwyt podchwytem na szerokość barków.','Łopatki w dół, podciągnij brodę nad drążek.','3 s kontrolowanego zejścia.','Zostaw 2 powtórzenia zapasu (RIR 2) — to dzień objętości, nie rekordów.'],
+    cues:'<b>RIR 2</b> = kończysz serię, kiedy dałbyś radę zrobić jeszcze 2.',
+    you:'Jak w nachwycie: bez biernego zwisu na dole.',
+    err:['Doklejanie powtórzeń do upadku','Kipping']},
+  hollow:{name:'Hollow body hold',mode:'time',band:false,tempo:'izometria',anim:'hollow',cat:'Core',
+    steps:['Połóż się, wciśnij lędźwie w matę.','Unieś jednocześnie barki i wyprostowane nogi nisko nad podłogę, ręce za głową.','Trzymaj kształt "banana" — lędźwie cały czas wciśnięte.','Za trudne? Ugnij kolana albo unieś nogi wyżej.'],
+    cues:'<b>Pozycja bazowa gimnastyków.</b> Przenosi się na pompki, podciąganie i wszystko inne.',
+    err:['Odrywanie lędźwi','Zadzieranie głowy do klatki','Wstrzymywanie oddechu']},
+  climbers:{name:'Mountain climbers',mode:'reps_side',band:false,tempo:'dynamicznie',anim:null,cat:'Kondycja',
+    steps:['Podpór przodem NA UCHWYTACH, ciało w linii.','Dynamicznie przyciągaj kolana do klatki naprzemiennie.','Biodra nisko, brzuch spięty — to nie podskoki pupy.'],
+    cues:'<b>Finisher:</b> tu możesz się zmęczyć. Tempo wysokie, forma trzymana.',
+    you:'Tylko na uchwytach — proste nadgarstki przy dynamice to proszenie się o ból.',
+    err:['Biodra wędrują w górę','Tupanie całą stopą']},
+};
+
+const WORKOUTS={
+  A:{name:'Push + Core',desc:'pompki · pike · barki · brzuch',time:'~25 min',
+     items:[{ex:'pompki',sets:4,target:'8–12'},{ex:'pike',sets:3,target:'6–10'},{ex:'ohp',sets:3,target:'10–12'},{ex:'deadbug',sets:3,target:'8/str'},{ex:'plank',sets:3,target:'30–45 s'}]},
+  B:{name:'Pull + Postawa',desc:'podciąganie · wiosłowanie · plecy po pracy',time:'~25 min',
+     items:[{ex:'pullup',sets:4,target:'max−1'},{ex:'row',sets:3,target:'12–15'},{ex:'facepull',sets:3,target:'15'},{ex:'pullapart',sets:3,target:'15–20'},{ex:'birddog',sets:3,target:'8/str'},{ex:'bridge',sets:3,target:'12–15'}]},
+  C:{name:'Full Body + Kondycja',desc:'nogi w tempie · podciąganie · finisher',time:'~25–30 min',
+     items:[{ex:'splitsquat',sets:3,target:'8–10/str'},{ex:'slrdl',sets:3,target:'8/str'},{ex:'chinup',sets:3,target:'submax (RIR 2)'},{ex:'hollow',sets:3,target:'15–25 s'},{ex:'climbers',sets:3,target:'20/str'}]},
+  MIN:{name:'Minimum',desc:'na słaby dzień — 4 rundy obwodu',time:'~15 min',
+     items:[{ex:'pompki',sets:4,target:'8–10'},{ex:'row',sets:4,target:'12'},{ex:'deadbug',sets:4,target:'6/str'}]},
+};
+const WK_ORDER=['A','B','C','MIN'];
+
+/* ================= ANIMACJE (SVG + SMIL) ================= */
+function svgWrap(inner){return `<svg viewBox="0 0 200 120" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round">
+<line x1="14" y1="110" x2="186" y2="110" stroke="#3a4754" stroke-width="2"/>${inner}</svg>`;}
+const KT='keyTimes="0;0.4;0.62;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1;0 0 1 1;0.4 0 0.2 1"';
+function pl(values,extra=''){const f=values[0];return `<polyline points="${f}" ${extra}><animate attributeName="points" values="${values[0]};${values[1]};${values[1]};${values[0]}" ${KT}/></polyline>`;}
+function hd(a,b,r=6){return `<circle r="${r}" cx="${a[0]}" cy="${a[1]}" fill="currentColor" stroke="none"><animate attributeName="cx" values="${a[0]};${b[0]};${b[0]};${a[0]}" ${KT}/><animate attributeName="cy" values="${a[1]};${b[1]};${b[1]};${a[1]}" ${KT}/></circle>`;}
+const ACC='stroke="var(--accent)"';
+const FNT='stroke-opacity=".35"';
+
+const ANIMS={
+  deadbug:()=>svgWrap(
+    `<circle cx="48" cy="98" r="6" fill="currentColor" stroke="none"/>`+
+    `<line x1="58" y1="100" x2="102" y2="100"/>`+
+    `<polyline points="102,100 108,74 130,72" ${FNT}/>`+ // noga statyczna
+    `<polyline points="64,98 62,66" ${FNT}/>`+           // ręka statyczna
+    pl(['102,100 108,74 130,72','102,100 124,90 150,87'],ACC)+ // noga pracująca
+    pl(['66,98 64,66','66,98 38,76'],ACC)+               // ręka pracująca
+    `<text x="100" y="20" text-anchor="middle" fill="var(--muted)" stroke="none" font-size="9" font-family="Archivo">lędźwie wciśnięte w matę</text>`),
+  birddog:()=>svgWrap(
+    hd([50,68],[50,68],6)+
+    `<line x1="58" y1="72" x2="114" y2="74"/>`+
+    `<polyline points="66,74 66,108" ${FNT}/>`+
+    `<polyline points="112,74 118,108" ${FNT}/>`+
+    pl(['72,74 76,106','72,74 36,64'],ACC)+
+    pl(['108,74 122,102','108,74 152,62'],ACC)+
+    `<text x="100" y="20" text-anchor="middle" fill="var(--muted)" stroke="none" font-size="9" font-family="Archivo">biodra równolegle — zero rotacji</text>`),
+  hollow:()=>svgWrap(
+    hd([58,98],[60,82])+
+    pl(['44,100 66,102 100,103 134,102 160,100','40,76 64,90 100,100 134,88 156,74'])+
+    `<text x="100" y="20" text-anchor="middle" fill="var(--muted)" stroke="none" font-size="9" font-family="Archivo">kształt banana, lędźwie w macie</text>`),
+  bridge:()=>svgWrap(
+    `<circle cx="48" cy="102" r="6" fill="currentColor" stroke="none"/>`+
+    pl(['60,104 96,104 114,80 120,107','60,104 99,76 114,80 120,107'])+
+    pl(['62,106 88,107','62,106 88,107'],FNT)+
+    `<text x="100" y="20" text-anchor="middle" fill="var(--muted)" stroke="none" font-size="9" font-family="Archivo">pchaj piętami, spinaj pośladki</text>`),
+  facepull:()=>svgWrap(
+    hd([70,42],[70,42],7)+
+    `<line x1="70" y1="51" x2="70" y2="84"/><polyline points="62,108 70,84 78,108"/>`+
+    `<circle cx="160" cy="50" r="3.5" fill="var(--muted)" stroke="none"/>`+
+    pl(['70,56 88,58 106,56','70,56 88,66 82,46'],ACC)+
+    pl(['160,50 106,56','160,50 82,46'],'stroke="var(--b-czerwona)" stroke-width="2.6" stroke-dasharray="1 5"')+
+    `<text x="100" y="16" text-anchor="middle" fill="var(--muted)" stroke="none" font-size="9" font-family="Archivo">łokcie szeroko, guma do twarzy</text>`),
+  pullapart:()=>svgWrap(
+    `<circle cx="100" cy="34" r="7" fill="currentColor" stroke="none"/>`+
+    `<line x1="100" y1="43" x2="100" y2="88"/><polyline points="88,110 100,88 112,110"/>`+
+    pl(['90,50 93,62','90,50 62,58'],ACC)+
+    pl(['110,50 107,62','110,50 138,58'],ACC)+
+    pl(['93,62 107,62','62,58 138,58'],'stroke="var(--b-czerwona)" stroke-width="2.6" stroke-dasharray="1 5"')+
+    `<text x="100" y="16" text-anchor="middle" fill="var(--muted)" stroke="none" font-size="9" font-family="Archivo">proste ręce, łopatki do siebie</text>`),
+  pike:()=>svgWrap(
+    hd([76,82],[66,96])+
+    pl(['60,106 80,72 106,56 142,106','60,106 70,90 104,60 142,106'])+
+    `<text x="100" y="20" text-anchor="middle" fill="var(--muted)" stroke="none" font-size="9" font-family="Archivo">głowa między uchwyty, biodra wysoko</text>`),
+  slrdl:()=>svgWrap(
+    hd([84,38],[44,72])+
+    `<polyline points="84,82 84,108"/>`+
+    pl(['84,82 84,46','84,82 50,72'])+
+    pl(['84,82 88,108','84,82 120,68'],ACC)+
+    pl(['84,52 80,70','52,74 50,96'],FNT)+
+    `<text x="100" y="20" text-anchor="middle" fill="var(--muted)" stroke="none" font-size="9" font-family="Archivo">zawias w biodrze, plecy proste</text>`),
+  splitsquat:()=>svgWrap(
+    hd([92,32],[92,48])+
+    pl(['92,40 92,68','92,56 92,84'])+
+    pl(['60,108 70,86 92,68','60,108 66,90 92,84'],ACC)+
+    pl(['92,68 110,92 126,108','92,84 106,100 126,108'])+
+    `<text x="100" y="16" text-anchor="middle" fill="var(--muted)" stroke="none" font-size="9" font-family="Archivo">tułów pionowo, kolano w dół</text>`),
+  row:()=>svgWrap(
+    hd([70,52],[70,52],6.5)+
+    `<line x1="70" y1="60" x2="70" y2="100"/><polyline points="70,100 132,102 134,94"/>`+
+    pl(['70,64 100,80','70,64 78,86'],ACC)+
+    pl(['134,96 100,80','134,96 78,86'],'stroke="var(--b-czerwona)" stroke-width="2.6" stroke-dasharray="1 5"')+
+    `<text x="100" y="16" text-anchor="middle" fill="var(--muted)" stroke="none" font-size="9" font-family="Archivo">łokieć do żeber, łopatki ściągnięte</text>`),
+};
+
+/* ================= STAN ================= */
+const KEY='atletyczna_baza_v1';
+const store={ok:true,
+  load(){try{const r=localStorage.getItem(KEY);return r?JSON.parse(r):null}catch(e){this.ok=false;return null}},
+  save(){try{localStorage.setItem(KEY,JSON.stringify(db))}catch(e){if(this.ok){this.ok=false;showBanner()}}}
+};
+let db=store.load()||{sessions:[],tests:[],draft:null};
+if(!store.ok)showBanner();
+function showBanner(){document.getElementById('storeBanner').classList.add('show')}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
+function save(){store.save()}
+const fmtD=d=>new Date(d).toLocaleDateString('pl-PL',{weekday:'short',day:'numeric',month:'short'});
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* ================= NAWIGACJA ================= */
+const TABS=[
+  {id:'trening',label:'Trening',ic:'<path d="M4 12h2m12 0h2M7 8v8M17 8v8M7 12h10"/>'},
+  {id:'historia',label:'Historia',ic:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/>'},
+  {id:'postepy',label:'Postępy',ic:'<path d="M4 19 L4 5 M4 19 L20 19 M7 15l4-5 3 3 5-7"/>'},
+  {id:'atlas',label:'Atlas',ic:'<path d="M12 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM5 20c1-4 3.5-6 7-6s6 2 7 6"/>'},
+  {id:'plan',label:'Plan',ic:'<rect x="5" y="4" width="14" height="16" rx="2"/><path d="M9 9h6M9 13h6M9 17h3"/>'},
+];
+let tab='trening';
+function renderNav(){
+  document.getElementById('nav').innerHTML=TABS.map(t=>
+    `<button class="${tab===t.id?'on':''}" onclick="go('${t.id}')"><svg viewBox="0 0 24 24">${t.ic}</svg>${t.label}</button>`).join('');
+}
+function go(t){tab=t;renderNav();
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('view-'+t).classList.add('active');
+  ({trening:renderTrening,historia:renderHistoria,postepy:renderPostepy,atlas:renderAtlas,plan:renderPlan})[t]();
+  window.scrollTo(0,0);
+}
+
+/* ================= TIMER PRZERW ================= */
+let tInt=null,tLeft=0;
+function startTimer(s){clearInterval(tInt);tLeft=s;tickTimer();
+  tInt=setInterval(()=>{tLeft--;tickTimer();
+    if(tLeft<=0){clearInterval(tInt);tInt=null;if(navigator.vibrate)navigator.vibrate([180,90,180]);}
+  },1000);}
+function tickTimer(){const el=document.getElementById('tdisp');if(!el)return;
+  if(tLeft>0){el.textContent=`${Math.floor(tLeft/60)}:${String(tLeft%60).padStart(2,'0')}`;el.classList.add('run')}
+  else{el.textContent='—:——';el.classList.remove('run')}}
+
+/* ================= TRENING ================= */
+function lastOf(w){const s=db.sessions.filter(x=>x.workout===w).sort((a,b)=>b.date.localeCompare(a.date))[0];return s?s.date:null}
+function daysAgo(d){if(!d)return null;return Math.floor((Date.now()-new Date(d))/864e5)}
+function suggestNext(){
+  const last=db.sessions.filter(s=>s.workout!=='MIN').sort((a,b)=>b.date.localeCompare(a.date))[0];
+  if(!last)return 'A';
+  const i=['A','B','C'].indexOf(last.workout);return ['A','B','C'][(i+1)%3];
+}
+function newDraft(w){
+  const wk=WORKOUTS[w];
+  db.draft={id:uid(),date:new Date().toISOString(),workout:w,feel:null,
+    entries:wk.items.map(it=>({ex:it.ex,sets:Array.from({length:it.sets},()=>({v:0,band:null})),note:''}))};
+  save();renderTrening();
+}
+function renderTrening(){
+  const el=document.getElementById('view-trening');
+  if(db.draft){el.innerHTML=renderActive();return}
+  const sug=suggestNext();
+  el.innerHTML=`
+    <p class="suggest">Dziś w rotacji wypada: <b>Trening ${sug} — ${WORKOUTS[sug].name}</b>. Słaby dzień? Zrób MIN — liczy się tak samo.</p>
+    <div class="wk-pick">${WK_ORDER.map(k=>{const w=WORKOUTS[k],d=daysAgo(lastOf(k));
+      return `<div class="card tap" onclick="newDraft('${k}')">
+        <div class="wk-letter">${k==='MIN'?'M':k}</div>
+        <div class="meta"><b>${w.name}</b><span>${w.desc} · ${w.time}${d!==null?` · ostatnio ${d===0?'dziś':d+' dni temu'}`:''}</span></div>
+        <span class="chip">${w.items.length} ćw.</span>
+      </div>`}).join('')}
+    </div>
+    <h2 class="sec">Co 4 tygodnie</h2>
+    <div class="card tap" onclick="openTest()">
+      <div class="row"><div class="grow"><b style="font-size:.92rem">Test formy</b>
+      <div style="font-size:.74rem;color:var(--muted);margin-top:3px">max pompki · max podciągnięcia · plank · energia · waga</div></div>
+      <span class="chip accent">→</span></div>
+    </div>`;
+}
+function bandPicker(ei,si,cur,kind){
+  const lbl=kind==='asysta'?'asysta':'guma';
+  return `<div class="bandsel" title="${lbl}">${BANDS.map(b=>
+    `<div class="bdot ${cur===b.id?'on':''}" style="background:${b.color}" onclick="setBand(${ei},${si},'${b.id}')"></div>`).join('')}</div>`;
+}
+function renderActive(){
+  const d=db.draft,w=WORKOUTS[d.workout];
+  return `
+  <div class="session-head">
+    <h2>Trening ${d.workout==='MIN'?'minimum':d.workout} <span style="color:var(--muted);font-weight:500;text-transform:none;font-size:.8rem">· ${w.name}</span></h2>
+    <button class="btn small ghost" onclick="cancelDraft()">Anuluj</button>
+  </div>
+  <div class="timerbar">
+    <span style="font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">Przerwa</span>
+    <button class="btn small" onclick="startTimer(60)">60 s</button>
+    <button class="btn small" onclick="startTimer(90)">90 s</button>
+    <span class="tdisp mono" id="tdisp">—:——</span>
+  </div>
+  ${d.entries.map((en,ei)=>{
+    const ex=EX[en.ex],it=w.items[ei];
+    const done=en.sets.some(s=>s.v>0);
+    const unit=ex.mode==='time'?'sek':(ex.mode==='reps_side'?'/str':'powt');
+    return `<div class="ex-card ${done?'done':''}">
+      <div class="ex-head">
+        <div class="row"><div class="name grow">${ex.name}</div>
+        <button class="howbtn" onclick="toggleHow(${ei})">jak wykonać</button></div>
+        <div class="tags">
+          <span class="chip accent">${it.sets} × ${it.target}</span>
+          <span class="tempo">${ex.tempo}</span>
+          ${ex.band==='opor'?'<span class="chip">z gumą</span>':''}
+          ${ex.band==='asysta'?'<span class="chip">guma = asysta</span>':''}
+        </div>
+      </div>
+      <div class="howto" id="how-${ei}" style="display:none">${howHTML(en.ex)}</div>
+      <div class="sets">
+        ${en.sets.map((s,si)=>`<div class="setrow">
+          <span class="idx">${si+1}</span>
+          <div class="stepper">
+            <button onclick="bump(${ei},${si},-1)">−</button>
+            <input type="number" inputmode="numeric" value="${s.v||''}" placeholder="0" onchange="setVal(${ei},${si},this.value)">
+            <button onclick="bump(${ei},${si},1)">+</button>
+          </div>
+          <span class="unit">${unit}</span>
+          ${ex.band?bandPicker(ei,si,s.band,ex.band):''}
+          ${en.sets.length>1?`<button class="delset" onclick="delSet(${ei},${si})">✕</button>`:''}
+        </div>`).join('')}
+        <button class="btn small ghost addset" onclick="addSet(${ei})">+ dodaj serię</button>
+        <input class="exnote" placeholder="notatka (np. ból nadgarstka 2/10, łatwa guma)" value="${esc(en.note)}" onchange="setNote(${ei},this.value)">
+      </div>
+    </div>`}).join('')}
+  <div class="finish-box card">
+    <b style="font-size:.88rem">Jak poszło?</b>
+    <div class="feel">${[['1','Lekko'],['2','W sam raz'],['3','Ciężko']].map(([v,l])=>
+      `<button class="${d.feel===+v?'on':''}" onclick="setFeel(${v})">${l}</button>`).join('')}</div>
+    <button class="btn primary wfull" onclick="finishDraft()">Zapisz trening</button>
+  </div>`;
+}
+function howHTML(exId){const ex=EX[exId];
+  return `${ex.anim?`<div class="animbox">${ANIMS[ex.anim]()}</div>`:''}
+  <ol>${ex.steps.map(s=>`<li>${s}</li>`).join('')}</ol>
+  <div class="cues">${ex.cues||''}${ex.err?`<br><b>Błędy:</b> ${ex.err.join(' · ')}`:''}</div>
+  ${ex.you?`<div class="youbox">Dla Ciebie: ${ex.you}</div>`:''}`;
+}
+function toggleHow(ei){const el=document.getElementById('how-'+ei);el.style.display=el.style.display==='none'?'block':'none'}
+function bump(ei,si,d){const s=db.draft.entries[ei].sets[si];s.v=Math.max(0,(s.v||0)+d);save();refreshSet(ei,si)}
+function setVal(ei,si,v){db.draft.entries[ei].sets[si].v=Math.max(0,parseInt(v)||0);save();renderTrening()}
+function setBand(ei,si,b){const s=db.draft.entries[ei].sets[si];s.band=s.band===b?null:b;save();renderTrening()}
+function refreshSet(ei,si){renderTrening()}
+function addSet(ei){db.draft.entries[ei].sets.push({v:0,band:null});save();renderTrening()}
+function delSet(ei,si){db.draft.entries[ei].sets.splice(si,1);save();renderTrening()}
+function setNote(ei,v){db.draft.entries[ei].note=v;save()}
+function setFeel(v){db.draft.feel=v;save();renderTrening()}
+function cancelDraft(){if(confirm('Porzucić ten trening bez zapisu?')){db.draft=null;save();renderTrening()}}
+function finishDraft(){
+  const d=db.draft;
+  d.entries=d.entries.map(e=>({...e,sets:e.sets.filter(s=>s.v>0)})).filter(e=>e.sets.length);
+  if(!d.entries.length){alert('Wpisz przynajmniej jedną serię.');renderTrening();return}
+  db.sessions.push(d);db.draft=null;save();go('historia');
+}
+
+/* ================= HISTORIA ================= */
+function sessSummary(s){
+  return s.entries.map(e=>{const ex=EX[e.ex];
+    const vals=e.sets.map(x=>x.v).join('/');
+    const bands=[...new Set(e.sets.map(x=>x.band).filter(Boolean))].map(b=>BMAP[b].label.split(' ')[0]).join(',');
+    return `<b>${ex.name}</b> ${e.sets.length}×: ${vals}${ex.mode==='time'?' s':''}${bands?` <span style="color:var(--faint)">[${bands}]</span>`:''}${e.note?` <span style="color:var(--faint)">· ${esc(e.note)}</span>`:''}`;
+  }).join('<br>');
+}
+function renderHistoria(){
+  const el=document.getElementById('view-historia');
+  if(!db.sessions.length){el.innerHTML=`<div class="empty"><span class="big">📓</span>Pusty dziennik to dobry znak —<br>za chwilę będzie pierwszy wpis.<br><br><button class="btn primary" onclick="go('trening')">Zacznij trening</button></div>`;return}
+  const sorted=[...db.sessions].sort((a,b)=>b.date.localeCompare(a.date));
+  const FEEL={1:'lekko',2:'w sam raz',3:'ciężko'};
+  el.innerHTML=`<h2 class="sec">${db.sessions.length} ${db.sessions.length===1?'zapisany trening':'zapisanych treningów'}</h2>`+
+    sorted.map(s=>`<div class="card h-sess">
+      <div class="top"><div class="wk-letter">${s.workout==='MIN'?'M':s.workout}</div>
+        <div class="grow"><b>${WORKOUTS[s.workout].name}</b><time>${fmtD(s.date)}${s.feel?` · ${FEEL[s.feel]}`:''}</time></div>
+        <button class="delset" onclick="delSess('${s.id}')">✕</button></div>
+      <div class="h-lines">${sessSummary(s)}</div>
+    </div>`).join('');
+}
+function delSess(id){if(!confirm('Usunąć ten trening z historii?'))return;
+  db.sessions=db.sessions.filter(s=>s.id!==id);save();renderHistoria()}
+
+/* ================= POSTĘPY ================= */
+function weekCount(){
+  const now=new Date();const day=(now.getDay()+6)%7;
+  const mon=new Date(now);mon.setHours(0,0,0,0);mon.setDate(now.getDate()-day);
+  return db.sessions.filter(s=>new Date(s.date)>=mon).length;
+}
+let selEx=null;
+function renderPostepy(){
+  const el=document.getElementById('view-postepy');
+  const exWithData=[...new Set(db.sessions.flatMap(s=>s.entries.map(e=>e.ex)))];
+  if(selEx===null)selEx=exWithData.includes('pompki')?'pompki':(exWithData[0]||null);
+  const wc=weekCount();
+  el.innerHTML=`
+  <div class="tiles">
+    <div class="tile"><div class="v">${wc}/3</div><div class="l">ten tydzień</div></div>
+    <div class="tile"><div class="v">${db.sessions.length}</div><div class="l">treningi łącznie</div></div>
+    <div class="tile"><div class="v">${db.tests.length}</div><div class="l">testy formy</div></div>
+  </div>
+  ${wc>=2?`<p style="font-size:.74rem;color:var(--ok);margin:8px 2px 0">Tydzień zaliczony (min. 2 treningi) ✓</p>`:''}
+  <h2 class="sec">Wykres ćwiczenia</h2>
+  ${exWithData.length?`
+    <select class="exsel" onchange="selEx=this.value;renderPostepy()">
+      ${exWithData.map(e=>`<option value="${e}" ${e===selEx?'selected':''}>${EX[e].name}</option>`).join('')}
+    </select>
+    <div class="card">${chartFor(selEx)}</div>`
+  :`<div class="empty">Wykresy pojawią się po pierwszym zapisanym treningu.</div>`}
+  <h2 class="sec">Testy formy (co 4 tyg.)</h2>
+  ${db.tests.length?`<div class="card" style="overflow-x:auto"><table class="testtable">
+      <tr><th>data</th><th>pompki</th><th>podciąg.</th><th>plank</th><th>energia</th><th>waga</th></tr>
+      ${db.tests.map((t,i)=>{const p=db.tests[i-1];
+        const dlt=(k,suf='')=>{if(!p||p[k]==null||t[k]==null)return '';const d=t[k]-p[k];if(!d)return '';
+          return `<span class="delta ${d>0?'up':'dn'}">${d>0?'+':''}${Math.round(d*10)/10}${suf}</span>`};
+        return `<tr><td>${new Date(t.date).toLocaleDateString('pl-PL',{day:'2-digit',month:'2-digit'})}</td>
+        <td>${t.pushups??'—'}${dlt('pushups')}</td><td>${t.pullups??'—'}${dlt('pullups')}</td>
+        <td>${t.plank??'—'} s${dlt('plank')}</td><td>${t.energy??'—'}/10${dlt('energy')}</td>
+        <td>${t.weight??'—'}${dlt('weight')}</td></tr>`}).join('')}
+    </table></div>`
+  :`<div class="card" style="font-size:.78rem;color:var(--muted)">Brak testów. Pierwszy zrób na starcie planu — to Twój punkt odniesienia. <button class="btn small" style="margin-top:8px;display:block" onclick="openTest()">Zrób test teraz</button></div>`}
+  <h2 class="sec">Dane</h2>
+  <div class="row" style="gap:8px;margin-bottom:30px">
+    <button class="btn small grow" onclick="exportData()">Eksport JSON</button>
+    <label class="btn small grow" style="text-align:center">Import<input type="file" accept=".json" onchange="importData(this)"></label>
+    <button class="btn small danger" onclick="wipe()">Wyczyść</button>
+  </div>`;
+}
+function chartFor(exId){
+  const pts=db.sessions.filter(s=>s.entries.some(e=>e.ex===exId))
+    .sort((a,b)=>a.date.localeCompare(b.date))
+    .map(s=>{const e=s.entries.find(e=>e.ex===exId);
+      return {d:s.date,total:e.sets.reduce((a,x)=>a+x.v,0),best:Math.max(...e.sets.map(x=>x.v))}});
+  if(!pts.length)return '<div class="empty" style="padding:20px">brak danych</div>';
+  const isTime=EX[exId].mode==='time';
+  const W=320,H=150,P={l:30,r:10,t:14,b:22};
+  const xs=i=>pts.length===1?W/2:P.l+i*(W-P.l-P.r)/(pts.length-1);
+  const max=Math.max(...pts.map(p=>p.total))*1.15||10;
+  const ys=v=>H-P.b-(v/max)*(H-P.t-P.b);
+  const line=(key,color,dash)=>{
+    const path=pts.map((p,i)=>`${xs(i)},${ys(p[key])}`).join(' ');
+    return `<polyline points="${path}" fill="none" stroke="${color}" stroke-width="2.2" ${dash?'stroke-dasharray="3 4"':''} stroke-linecap="round" stroke-linejoin="round"/>`+
+      pts.map((p,i)=>`<circle cx="${xs(i)}" cy="${ys(p[key])}" r="3" fill="${color}"/>`).join('');
+  };
+  const gridv=[0,.5,1].map(f=>{const v=Math.round(max*f);
+    return `<line x1="${P.l}" y1="${ys(v)}" x2="${W-P.r}" y2="${ys(v)}" stroke="var(--line)" stroke-width="1"/><text class="axis" x="${P.l-5}" y="${ys(v)+3}" text-anchor="end">${v}</text>`}).join('');
+  const lastLbl=`<text class="axis" x="${xs(pts.length-1)}" y="${ys(pts[pts.length-1].total)-7}" text-anchor="middle" fill="var(--accent)">${pts[pts.length-1].total}</text>`;
+  return `<svg class="chart" viewBox="0 0 ${W} ${H}">${gridv}${line('best','var(--faint)',true)}${line('total','var(--accent)')}${lastLbl}</svg>
+  <div style="display:flex;gap:14px;font-size:.66rem;color:var(--muted);margin-top:4px">
+    <span><span style="color:var(--accent)">●</span> suma ${isTime?'sekund':'powtórzeń'} w treningu</span>
+    <span><span style="color:var(--faint)">●</span> najlepsza seria</span></div>`;
+}
+function exportData(){
+  const blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download=`atletyczna-baza-${new Date().toISOString().slice(0,10)}.json`;a.click();
+}
+function importData(inp){const f=inp.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=()=>{try{const d=JSON.parse(r.result);
+    if(!Array.isArray(d.sessions))throw 0;
+    if(confirm(`Wczytać ${d.sessions.length} treningów i ${d.tests?.length||0} testów? Obecne dane zostaną nadpisane.`)){
+      db=d;save();renderPostepy();}
+  }catch(e){alert('Nieprawidłowy plik.')}};
+  r.readAsText(f);inp.value='';
+}
+function wipe(){if(confirm('Na pewno usunąć WSZYSTKIE dane dziennika?')&&confirm('Ostatnie ostrzeżenie — tej operacji nie da się cofnąć.')){
+  db={sessions:[],tests:[],draft:null};save();renderPostepy()}}
+
+/* ================= TEST FORMY ================= */
+function openTest(){
+  openSheet(`<h3>Test formy</h3>
+  <p style="font-size:.78rem;color:var(--muted);margin-bottom:14px;line-height:1.5">Wypoczęty, po rozgrzewce. Pompki i podciągnięcia do czystego maksimum (technika!), plank do utraty pozycji. Powtarzaj co 4 tygodnie.</p>
+  <div class="testform">
+    <div class="frow"><label>Max pompki (na uchwytach)</label><input id="t-pu" type="number" inputmode="numeric" placeholder="np. 25"></div>
+    <div class="frow"><label>Max podciągnięcia</label><input id="t-pl" type="number" inputmode="numeric" placeholder="np. 6"></div>
+    <div class="frow"><label>Plank — sekundy</label><input id="t-pk" type="number" inputmode="numeric" placeholder="np. 60"></div>
+    <div class="frow"><label>Energia w ciągu dnia (1–10)</label><input id="t-en" type="number" inputmode="numeric" min="1" max="10" placeholder="np. 4"></div>
+    <div class="frow"><label>Waga (kg)</label><input id="t-wg" type="number" inputmode="decimal" step="0.1" placeholder="np. 80"></div>
+    <button class="btn primary wfull" onclick="saveTest()">Zapisz test</button>
+  </div>`);
+}
+function num(id){const v=document.getElementById(id).value;return v===''?null:parseFloat(v)}
+function saveTest(){
+  const t={date:new Date().toISOString(),pushups:num('t-pu'),pullups:num('t-pl'),plank:num('t-pk'),energy:num('t-en'),weight:num('t-wg')};
+  if([t.pushups,t.pullups,t.plank,t.energy,t.weight].every(v=>v==null)){alert('Wpisz przynajmniej jedną wartość.');return}
+  db.tests.push(t);save();closeSheet();go('postepy');
+}
+
+/* ================= ATLAS ================= */
+function renderAtlas(){
+  const el=document.getElementById('view-atlas');
+  const cats=['Push','Pull','Postawa','Core','Nogi','Kondycja'];
+  el.innerHTML=cats.map(c=>{
+    const list=Object.entries(EX).filter(([,e])=>e.cat===c);
+    if(!list.length)return '';
+    return `<h2 class="sec">${c}</h2><div class="atlas-grid">${list.map(([id,e])=>
+      `<div class="card tap" onclick="openEx('${id}')"><b>${e.name}</b><span>${e.tempo}${e.anim?' · animacja':''}</span></div>`).join('')}</div>`;
+  }).join('');
+}
+function openEx(id){const e=EX[id];
+  openSheet(`<button class="close" onclick="closeSheet()">✕</button><h3>${e.name}</h3>
+  <div class="tags" style="display:flex;gap:6px;margin-bottom:12px"><span class="tempo">${e.tempo}</span><span class="chip">${e.cat}</span></div>
+  ${howHTML(id)}`);
+}
+function openSheet(html){
+  document.getElementById('sheet').innerHTML=html;
+  document.getElementById('sheet').classList.add('show');
+  document.getElementById('overlay').classList.add('show');
+}
+function closeSheet(){
+  document.getElementById('sheet').classList.remove('show');
+  document.getElementById('overlay').classList.remove('show');
+}
+document.getElementById('overlay').onclick=closeSheet;
+
+/* ================= PLAN ================= */
+function renderPlan(){
+  document.getElementById('view-plan').innerHTML=`<div class="plan">
+  <h2 class="sec">Tydzień bazowy</h2>
+  <div class="card">
+    <div class="wkday"><span class="d">PON</span><span>Trening A — Push + Core</span><span class="t">25 min</span></div>
+    <div class="wkday"><span class="d">WT</span><span>Mobilka postawy</span><span class="t">8 min</span></div>
+    <div class="wkday"><span class="d">ŚR</span><span>Trening B — Pull + Postawa</span><span class="t">25 min</span></div>
+    <div class="wkday"><span class="d">CZW</span><span>Mobilka postawy</span><span class="t">8 min</span></div>
+    <div class="wkday"><span class="d">PT/SB</span><span>Trening C — Full Body</span><span class="t">25–30 min</span></div>
+    <div class="wkday"><span class="d">SŁABY DZIEŃ</span><span>MIN zamiast A/B/C</span><span class="t">15 min</span></div>
+  </div>
+  <p class="mut">Zasada: <b style="color:var(--text)">2 treningi w tygodniu = tydzień zaliczony.</b> 3 = pełny plan. Perfekcja nie jest celem, regularność tak.</p>
+
+  <h2 class="sec">Rozgrzewka — przed każdym treningiem (5 min)</h2>
+  <div class="card"><ul style="margin:0">
+    <li>Krążenia nadgarstków + zaciskanie pięści — 30 s</li>
+    <li>Cat-cow ×8</li>
+    <li>Chin tuck (cofanie brody) ×10</li>
+    <li>Band pull-apart ×15 (lekka guma)</li>
+    <li>Przysiady bez obciążenia ×10</li>
+    <li>World's greatest stretch ×3/stronę</li>
+  </ul></div>
+
+  <h2 class="sec">Progresja blokowa (12 tygodni)</h2>
+  <div class="card">
+    <p><b>Blok 1 (tyg. 1–4):</b> tyg. 1–2 dolne zakresy powtórzeń — celowo „za łatwo". Tyg. 3–4 górne zakresy. Na końcu test formy.</p>
+    <p><b>Blok 2 (tyg. 5–8):</b> pompki z nogami na podwyższeniu, podciąganie z pauzą 1 s na górze, glute bridge jednonóż. Opcjonalny 4. dzień (MIN lub kondycja), jeśli energia ≥ 6/10.</p>
+    <p style="margin:0"><b>Blok 3 (tyg. 9–12):</b> guma jako dociążenie (pompki, split squat), +1 seria w głównych ćwiczeniach. Test końcowy i decyzja co dalej.</p>
+  </div>
+
+  <h2 class="sec">Mobilka postawy — dni nietreningowe (8 min)</h2>
+  <div class="card"><ul style="margin:0">
+    <li>Chin tuck ×10</li>
+    <li>Wall slides (anioły przy ścianie) ×10</li>
+    <li>Cat-cow ×10</li>
+    <li>Rozciąganie zginaczy bioder — 45 s/stronę</li>
+    <li>Otwarcie klatki na krześle (thoracic ext.) ×8</li>
+    <li>Krążenia nadgarstków — 30 s</li>
+  </ul>
+  <p class="mut" style="margin:10px 0 0">+ w pracy: co 60 minut wstań na 2 min (chin tuck ×5, krążenia barków). To robi dla karku więcej niż trening.</p></div>
+
+  <h2 class="sec">Zasady ochronne</h2>
+  <div class="card">
+    <p><b>Nadgarstek / ganglion:</b> każda podpora na uchwytach lub przedramionach. Ból &gt;3/10 → zamiana ćwiczenia (plank → dead bug). Ganglion rośnie lub boli mocniej → ortopeda.</p>
+    <p><b>Hipermobilność:</b> nie domykaj łokci i kolan w pełnym wyproście, każdy ruch w zadanym tempie, zero rozciągania balistycznego. Czujesz mięsień, nie staw.</p>
+    <p style="margin:0"><b>Lędźwie:</b> dead bug i bird dog to ćwiczenia główne, nie wypełniacze. Jakość każdego powtórzenia.</p>
+  </div>
+
+  <h2 class="sec">Dieta i energia — prosto</h2>
+  <div class="card">
+    <p><b>~2850 kcal/dzień</b> (lekka nadwyżka) · <b>białko 150–160 g</b> — 30–40 g w każdym z 4 posiłków · tłuszcze 80–90 g (jajka, oliwa, orzechy, tłusta ryba).</p>
+    <p><b>Witamina D3 2000 IU dziennie.</b> Sen: w łóżku przed 23:00. Spacer z wózkiem 30 min = dzienne kroki załatwione.</p>
+    <p class="mut" style="margin:0">Niski testosteron masz zdiagnozowany — jeśli po 4 tygodniach energia nie rośnie: morfologia, TSH, wit. D, testosteron całkowity i wolny + wizyta u endokrynologa. Plan treningowy wspiera, ale nie zastępuje leczenia.</p>
+  </div>
+  <p class="mut" style="margin-bottom:30px">Wersja planu: Blok 1 · start czerwiec 2026 · przegląd po teście formy.</p>
+  </div>`;
+}
+
+/* ================= INIT ================= */
+document.getElementById('hdrDate').textContent=new Date().toLocaleDateString('pl-PL',{weekday:'long',day:'numeric',month:'long'});
+renderNav();go(db.draft?'trening':'trening');
+</script>
+</body>
+</html>
