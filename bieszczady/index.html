@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Bieszczady 2026 — Ropienka 11–14.06</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,900;1,9..144,500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --forest:#1f3026; --forest-2:#2b4435; --moss:#4a6b4f; --sage:#7d9a76;
+  --amber:#c97b3f; --amber-dk:#a85f2a; --gold:#e0a458;
+  --cream:#f4efe4; --cream-2:#ece4d3; --paper:#fbf8f0;
+  --ink:#22291f; --ink-soft:#4a513f; --line:#d9cfba;
+  --ok:#3e7d4f; --warn:#c97b3f; --rain:#3f6e8c; --danger:#b1493b;
+  --shadow:0 4px 18px rgba(31,48,38,.10); --shadow-lg:0 14px 40px rgba(31,48,38,.18);
+  --r:18px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Manrope',system-ui,sans-serif;color:var(--ink);
+  background:var(--cream);
+  background-image:radial-gradient(circle at 12% 8%,rgba(125,154,118,.18),transparent 38%),
+                   radial-gradient(circle at 88% 0%,rgba(201,123,63,.12),transparent 42%);
+  line-height:1.55;-webkit-font-smoothing:antialiased;padding-bottom:84px;
+}
+.wrap{max-width:880px;margin:0 auto;padding:0 16px}
+h1,h2,h3,h4{font-family:'Fraunces',serif;line-height:1.08;letter-spacing:-.01em}
+a{color:inherit}
+
+/* HEADER */
+header{
+  position:relative;overflow:hidden;color:var(--cream);
+  background:linear-gradient(160deg,var(--forest) 0%,var(--forest-2) 60%,var(--moss) 130%);
+  padding:34px 0 30px;border-bottom:3px solid var(--gold);
+}
+header::after{content:"";position:absolute;inset:0;opacity:.16;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='80' viewBox='0 0 180 80'%3E%3Cpath d='M0 80 L30 30 L52 55 L80 12 L110 60 L140 24 L180 80 Z' fill='none' stroke='%23e0a458' stroke-width='2'/%3E%3C/svg%3E");
+  background-size:200px;background-repeat:repeat-x;background-position:bottom;}
+.kicker{font-size:.72rem;letter-spacing:.32em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:8px}
+header h1{font-size:clamp(2.2rem,8vw,3.4rem);font-weight:900;color:var(--cream)}
+header h1 em{font-style:italic;color:var(--gold);font-weight:500}
+.sub{margin-top:10px;font-size:1rem;color:#dfe5d8;max-width:46ch}
+.badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.10);
+  border:1px solid rgba(224,164,88,.4);padding:6px 12px;border-radius:99px;font-size:.82rem;font-weight:600;backdrop-filter:blur(4px)}
+.count{margin-top:16px;display:inline-block;background:var(--gold);color:var(--forest);
+  font-weight:800;padding:7px 16px;border-radius:99px;font-size:.9rem;box-shadow:var(--shadow)}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:40;background:rgba(251,248,240,.92);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);box-shadow:0 2px 10px rgba(31,48,38,.05)}
+.nav-inner{display:flex;gap:4px;overflow-x:auto;max-width:880px;margin:0 auto;padding:8px 10px;scrollbar-width:none}
+.nav-inner::-webkit-scrollbar{display:none}
+.tab{flex:0 0 auto;border:none;background:transparent;color:var(--ink-soft);font-family:'Manrope';
+  font-weight:700;font-size:.86rem;padding:9px 14px;border-radius:99px;cursor:pointer;white-space:nowrap;transition:.18s;display:flex;align-items:center;gap:6px}
+.tab:hover{background:var(--cream-2)}
+.tab.active{background:var(--forest);color:var(--cream)}
+.tab .ic{font-size:1rem}
+
+/* PANELS */
+main{padding-top:24px;animation:fade .4s ease}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.panel{display:none}
+.panel.active{display:block;animation:fade .35s ease}
+section{margin-bottom:30px}
+.sec-head{display:flex;align-items:baseline;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.sec-head h2{font-size:1.5rem;font-weight:900}
+.sec-head .num{font-family:'Fraunces';font-style:italic;color:var(--amber);font-size:1.1rem;font-weight:600}
+.lead{color:var(--ink-soft);margin-bottom:16px;max-width:62ch}
+
+/* CARDS */
+.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:18px;box-shadow:var(--shadow);margin-bottom:14px}
+.card.hl{border-left:5px solid var(--gold)}
+.grid{display:grid;gap:14px}
+@media(min-width:640px){.grid.cols-2{grid-template-columns:1fr 1fr}}
+
+/* WEATHER */
+.weather-row{display:grid;gap:12px}
+@media(min-width:560px){.weather-row{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:780px){.weather-row{grid-template-columns:repeat(4,1fr)}}
+.wx{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:14px;text-align:center;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.wx .day{font-weight:800;font-size:.82rem;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-soft)}
+.wx .date{font-family:'Fraunces';font-weight:900;font-size:1.05rem;margin:2px 0 8px}
+.wx .ico{font-size:2.1rem;line-height:1;margin:4px 0}
+.wx .temp{font-family:'Fraunces';font-size:1.5rem;font-weight:900}
+.wx .temp small{font-size:.95rem;color:var(--sage);font-weight:600}
+.wx .meta{font-size:.74rem;color:var(--ink-soft);margin-top:6px;line-height:1.4}
+.wx .tip{margin-top:9px;font-size:.72rem;background:var(--cream-2);border-radius:10px;padding:6px 8px;color:var(--ink-soft)}
+.wx.best{border-color:var(--gold);border-width:2px}
+.wx.best::before{content:"★ najlepszy dzień";position:absolute;top:8px;right:-30px;background:var(--gold);color:var(--forest);font-family:'Manrope';font-weight:800;font-size:.55rem;letter-spacing:.05em;padding:3px 32px;transform:rotate(40deg)}
+
+.note{background:#fdf3e6;border:1px solid var(--gold);border-radius:14px;padding:12px 14px;font-size:.85rem;color:var(--ink-soft);display:flex;gap:10px}
+.note .ic{font-size:1.1rem}
+.note.rain{background:#eaf1f5;border-color:var(--rain)}
+
+/* QUICK FACTS */
+.facts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(min-width:560px){.facts{grid-template-columns:repeat(4,1fr)}}
+.fact{background:var(--forest);color:var(--cream);border-radius:14px;padding:14px;text-align:center}
+.fact .v{font-family:'Fraunces';font-size:1.5rem;font-weight:900;color:var(--gold)}
+.fact .l{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;opacity:.85;margin-top:2px}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:7px;border:none;cursor:pointer;font-family:'Manrope';
+  font-weight:700;font-size:.8rem;padding:9px 14px;border-radius:99px;transition:.16s;text-decoration:none}
+.btn-map{background:var(--forest);color:var(--cream)}
+.btn-map:hover{background:var(--forest-2);transform:translateY(-1px)}
+.btn-route{background:var(--amber);color:#fff}
+.btn-route:hover{background:var(--amber-dk);transform:translateY(-1px)}
+.btn-ghost{background:transparent;border:1.5px solid var(--line);color:var(--ink-soft)}
+.btn-ghost:hover{border-color:var(--moss);color:var(--forest)}
+
+/* ATTRACTION CARDS */
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+.chip{border:1.5px solid var(--line);background:var(--paper);color:var(--ink-soft);font-family:'Manrope';
+  font-weight:700;font-size:.78rem;padding:7px 13px;border-radius:99px;cursor:pointer;transition:.16s}
+.chip:hover{border-color:var(--sage)}
+.chip.on{background:var(--moss);color:#fff;border-color:var(--moss)}
+.atr{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:16px;box-shadow:var(--shadow);margin-bottom:13px;transition:.18s;position:relative}
+.atr.want{border-color:var(--gold);box-shadow:0 6px 20px rgba(224,164,88,.22)}
+.atr-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.atr h3{font-size:1.18rem;font-weight:900;margin-bottom:3px}
+.atr .tagrow{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.tag{font-size:.68rem;font-weight:700;padding:3px 9px;border-radius:99px;background:var(--cream-2);color:var(--ink-soft)}
+.tag.wozek{background:#e3efe1;color:#2f6b3a}
+.tag.indoor{background:#e7eef4;color:var(--rain)}
+.tag.kid{background:#fbeede;color:var(--amber-dk)}
+.tag.dist{background:var(--forest);color:var(--gold)}
+.atr p{font-size:.88rem;color:var(--ink-soft);margin:6px 0 10px}
+.atr .actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.star{background:none;border:none;cursor:pointer;font-size:1.5rem;line-height:1;color:var(--line);transition:.15s;flex:0 0 auto}
+.star.on{color:var(--gold);transform:scale(1.08)}
+.price{font-size:.78rem;font-weight:700;color:var(--amber-dk)}
+
+/* DAY PLAN */
+.day{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);margin-bottom:18px;overflow:hidden}
+.day-head{background:linear-gradient(135deg,var(--forest),var(--forest-2));color:var(--cream);padding:16px 18px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.day-head .dn{font-family:'Fraunces';font-weight:900;font-size:1.25rem}
+.day-head .dn em{font-style:italic;color:var(--gold);font-weight:500;display:block;font-size:.85rem;margin-top:2px}
+.day-head .dmeta{font-size:.78rem;text-align:right;opacity:.92}
+.day-body{padding:16px 18px}
+.slot{display:flex;gap:13px;padding:12px 0;border-bottom:1px dashed var(--line)}
+.slot:last-child{border-bottom:none}
+.slot .when{flex:0 0 78px;font-family:'Fraunces';font-weight:900;font-size:.82rem;color:var(--amber);text-transform:uppercase;letter-spacing:.04em;padding-top:2px}
+.slot .what{flex:1}
+.slot .what strong{display:block;font-size:.96rem;margin-bottom:2px;color:var(--ink)}
+.slot .what span{font-size:.85rem;color:var(--ink-soft)}
+.slot .what .mini{display:inline-flex;gap:8px;flex-wrap:wrap;margin-top:7px}
+.pill{font-size:.68rem;font-weight:700;padding:3px 9px;border-radius:99px;background:var(--cream-2);color:var(--ink-soft)}
+.pill.w{background:#e3efe1;color:#2f6b3a}
+.pill.n{background:#fbeede;color:var(--amber-dk)}
+.day-foot{padding:12px 18px;background:var(--cream);border-top:1px solid var(--line);display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.planb{margin:12px 18px 16px;background:#eaf1f5;border:1px solid var(--rain);border-radius:14px;padding:12px 14px;font-size:.85rem}
+.planb b{color:var(--rain)}
+
+/* FOOD */
+.radius-h{display:flex;align-items:center;gap:10px;margin:18px 0 10px}
+.radius-h .ring{width:36px;height:36px;border-radius:50%;background:var(--moss);color:#fff;display:grid;place-items:center;font-family:'Fraunces';font-weight:900;font-size:.8rem;flex:0 0 36px}
+.radius-h h3{font-size:1.1rem;font-weight:900}
+.specials{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.spec{cursor:pointer;border:1.5px solid var(--line);background:var(--paper);border-radius:99px;padding:7px 13px;font-size:.8rem;font-weight:600;color:var(--ink-soft);transition:.15s;user-select:none}
+.spec.on{background:var(--amber);color:#fff;border-color:var(--amber);text-decoration:line-through;opacity:.85}
+
+/* PACKING */
+.pack-cat{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);margin-bottom:14px;overflow:hidden}
+.pack-head{display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;user-select:none}
+.pack-head .pic{font-size:1.4rem}
+.pack-head .pt{flex:1}
+.pack-head .pt h3{font-size:1.05rem;font-weight:900}
+.pack-head .pt .pg{font-size:.74rem;color:var(--ink-soft)}
+.pbar{height:6px;background:var(--cream-2);border-radius:99px;overflow:hidden;margin-top:5px;width:120px;max-width:40vw}
+.pbar i{display:block;height:100%;background:var(--ok);border-radius:99px;transition:.3s;width:0}
+.pack-head .arr{transition:.2s;color:var(--sage)}
+.pack-cat.open .arr{transform:rotate(90deg)}
+.pack-list{display:none;padding:0 16px 14px}
+.pack-cat.open .pack-list{display:block}
+.pitem{display:flex;align-items:center;gap:11px;padding:8px 0;border-bottom:1px solid #efe8d8}
+.pitem:last-child{border-bottom:none}
+.pitem input{appearance:none;width:22px;height:22px;border:2px solid var(--line);border-radius:7px;cursor:pointer;flex:0 0 22px;transition:.15s;position:relative}
+.pitem input:checked{background:var(--ok);border-color:var(--ok)}
+.pitem input:checked::after{content:"✓";position:absolute;color:#fff;font-size:.8rem;font-weight:900;top:1px;left:4px}
+.pitem label{flex:1;font-size:.9rem;cursor:pointer}
+.pitem.done label{text-decoration:line-through;color:var(--sage)}
+.pitem .del{background:none;border:none;color:var(--line);cursor:pointer;font-size:1.1rem;padding:2px 6px}
+.pitem .del:hover{color:var(--danger)}
+.addrow{display:flex;gap:8px;margin-top:10px}
+.addrow input[type=text]{flex:1;border:1.5px solid var(--line);border-radius:10px;padding:9px 12px;font-family:'Manrope';font-size:.88rem;background:#fff}
+.addrow input[type=text]:focus{outline:none;border-color:var(--moss)}
+.addrow button{background:var(--moss);color:#fff;border:none;border-radius:10px;padding:0 16px;font-weight:700;cursor:pointer;font-family:'Manrope'}
+
+/* ROUTES */
+.routeday{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:16px;box-shadow:var(--shadow);margin-bottom:13px}
+.routeday h3{font-size:1.05rem;font-weight:900;margin-bottom:4px}
+.routeday .path{font-size:.85rem;color:var(--ink-soft);margin-bottom:10px}
+.routeday .path b{color:var(--forest)}
+.trail{border-left:4px solid var(--moss);padding:10px 0 10px 14px;margin-bottom:12px}
+.trail.n{border-color:var(--amber)}
+.trail h4{font-size:.98rem;font-weight:800;margin-bottom:3px}
+.trail .specs{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.trail p{font-size:.85rem;color:var(--ink-soft)}
+
+/* EMERGENCY */
+.emerg{background:#fdece9;border:1px solid var(--danger);border-radius:var(--r);padding:16px}
+.emerg h3{color:var(--danger);font-size:1.1rem;margin-bottom:8px}
+.emerg a{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid rgba(177,73,59,.15);text-decoration:none;font-weight:600;font-size:.9rem}
+.emerg a:last-child{border:none}
+.emerg a .ph{font-family:'Fraunces';font-weight:900;color:var(--danger)}
+
+.reset{background:none;border:1.5px solid var(--line);color:var(--ink-soft);font-family:'Manrope';font-weight:700;font-size:.78rem;padding:8px 14px;border-radius:99px;cursor:pointer}
+.reset:hover{border-color:var(--danger);color:var(--danger)}
+
+footer{text-align:center;color:var(--ink-soft);font-size:.78rem;padding:30px 16px 10px;border-top:1px solid var(--line);margin-top:20px}
+
+/* SZLAKI */
+.diff{display:inline-flex;align-items:center;gap:5px;font-size:.74rem;font-weight:800;padding:4px 10px;border-radius:99px;margin-bottom:4px}
+.diff.easy{background:#e3efe1;color:#2f6b3a}
+.diff.med{background:#fdf3e6;color:#8a5520}
+.diff.hard{background:#fdece9;color:var(--danger)}
+.hike{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:16px;box-shadow:var(--shadow);margin-bottom:13px;transition:.18s}
+.hike.fav{border-color:var(--gold);box-shadow:0 6px 20px rgba(224,164,88,.22)}
+.hike-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.hike h3{font-size:1.12rem;font-weight:900}
+.hike .hstar{background:none;border:none;cursor:pointer;font-size:1.4rem;color:var(--line);transition:.15s;flex:0 0 auto}
+.hike .hstar.on{color:var(--gold)}
+.hike-meta{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.hm{font-size:.72rem;font-weight:700;padding:3px 9px;border-radius:99px;background:var(--cream-2);color:var(--ink-soft);display:inline-flex;align-items:center;gap:3px}
+.hm.baby{background:#e3efe1;color:#2f6b3a}
+.hm.warn{background:#fdf3e6;color:#8a5520}
+.hm.dist{background:var(--forest);color:var(--gold)}
+.hm.bdg{background:#fbeede;color:var(--amber-dk)}
+.hike p{font-size:.88rem;color:var(--ink-soft);margin:6px 0 10px;line-height:1.55}
+.hike .hactions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.src{font-size:.72rem;color:var(--sage);text-decoration:underline;font-weight:600}
+.cat-hdr{display:flex;align-items:center;gap:12px;margin:22px 0 12px;padding-bottom:8px;border-bottom:2px solid var(--line)}
+.cat-hdr .cico{font-size:1.6rem}
+.cat-hdr h2{font-size:1.25rem;font-weight:900}
+.cat-hdr .csub{font-size:.82rem;color:var(--ink-soft);margin-top:2px}
+.hike-bar{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;background:var(--cream);border-radius:12px;padding:10px;margin-bottom:10px}
+@media(min-width:480px){.hike-bar{grid-template-columns:repeat(4,1fr)}}
+.hb{text-align:center}
+.hb .hbv{font-family:'Fraunces';font-size:1.1rem;font-weight:900;color:var(--forest)}
+.hb .hbl{font-size:.62rem;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-soft)}
+
+/* bottom mobile tabbar */
+.tabbar{position:fixed;bottom:0;left:0;right:0;z-index:50;background:var(--forest);display:flex;justify-content:space-around;padding:7px 4px 9px;box-shadow:0 -4px 18px rgba(31,48,38,.25)}
+@media(min-width:720px){.tabbar{display:none}}
+.tabbar button{background:none;border:none;color:#9fb5a0;font-family:'Manrope';font-size:.62rem;font-weight:700;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;flex:1}
+.tabbar button .ic{font-size:1.25rem}
+.tabbar button.active{color:var(--gold)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="kicker">Rodzinny wyjazd • 4 dni</div>
+    <h1>Bieszczady <em>w trzy osoby</em></h1>
+    <p class="sub">Baza w Ropience. Spokojne tempo, piękne widoki, dobre jedzenie — wszystko dopasowane do 10-miesięcznego podróżnika.</p>
+    <div class="badges">
+      <span class="badge">📅 11–14 czerwca 2026</span>
+      <span class="badge">🏡 Ropienka</span>
+      <span class="badge">🚗 z Gliwic ~5 h</span>
+      <span class="badge">👶 wózek + nosidło</span>
+    </div>
+    <div class="count" id="countdown">…</div>
+  </div>
+</header>
+
+<nav>
+  <div class="nav-inner" id="navInner">
+    <button class="tab active" data-tab="start"><span class="ic">🧭</span>Start</button>
+    <button class="tab" data-tab="plan"><span class="ic">🗓️</span>Plan dnia</button>
+    <button class="tab" data-tab="atrakcje"><span class="ic">📍</span>Atrakcje</button>
+    <button class="tab" data-tab="szlaki"><span class="ic">🥾</span>Szlaki</button>
+    <button class="tab" data-tab="trasy"><span class="ic">🛣️</span>Trasy</button>
+    <button class="tab" data-tab="jedzenie"><span class="ic">🍲</span>Jedzenie</button>
+    <button class="tab" data-tab="pakowanie"><span class="ic">🎒</span>Pakowanie</button>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<!-- ============ START ============ -->
+<div class="panel active" id="start">
+
+  <section>
+    <div class="sec-head"><span class="num">01</span><h2>Pogoda na pobyt</h2></div>
+    <p class="lead">Prognoza z 8.06 (yr.no / meteoblue), 3–6 dni przed wyjazdem — <b>sprawdź ponownie 1–2 dni przed</b>. Bieszczady w czerwcu: chłodne poranki, ciepłe dni, częste przelotne opady.</p>
+    <div class="weather-row" id="weatherRow"></div>
+    <div class="note rain" style="margin-top:14px"><span class="ic">🌧️</span><span><b>Czwartek to najbardziej mokry dzień</b> (możliwe burze, żółte ostrzeżenie IMGW). Dzień przyjazdu zostaw na odpoczynek i okolicę. Piątek = okno pogodowe → zaplanuj Solinę.</span></div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="num">02</span><h2>W skrócie</h2></div>
+    <div class="facts">
+      <div class="fact"><div class="v">~340</div><div class="l">km z Gliwic</div></div>
+      <div class="fact"><div class="v">~5 h</div><div class="l">czas jazdy</div></div>
+      <div class="fact"><div class="v">2–3</div><div class="l">punkty / dzień</div></div>
+      <div class="fact"><div class="v">~30</div><div class="l">km do Soliny</div></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="num">03</span><h2>Telefony alarmowe</h2></div>
+    <div class="emerg">
+      <h3>📞 Na wszelki wypadek</h3>
+      <a href="tel:112"><span>Numer alarmowy</span><span class="ph">112</span></a>
+      <a href="tel:601100300"><span>GOPR Bieszczady (ratunek w górach)</span><span class="ph">601 100 300</span></a>
+      <a href="tel:134610010"><span>Zagroda Żubrów Muczne (czy otwarte?)</span><span class="ph">13 461 00 10</span></a>
+      <a href="tel:607477110"><span>Karczma „Młyn" Ustrzyki (rezerwacja)</span><span class="ph">607 477 110</span></a>
+      <p style="font-size:.78rem;color:var(--ink-soft);margin-top:10px">💡 Zainstaluj aplikację <b>RATUNEK</b> — wysyła Twoją lokalizację do służb ratunkowych.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="num">04</span><h2>Co zrobić przed wyjazdem</h2></div>
+    <div class="card hl">
+      <ul style="list-style:none;font-size:.9rem;color:var(--ink-soft);line-height:2">
+        <li>✅ Zarezerwuj online: <b>kolejka gondolowa PKL Solina</b> i (opcjonalnie) <b>drezyny w Uhercach</b> / <b>kolejka leśna Majdan</b> — w weekend wyprzedają się szybko.</li>
+        <li>✅ Zadzwoń do <b>Zagrody Żubrów w Mucznem</b> — bywa zamykana z przyczyn weterynaryjnych.</li>
+        <li>✅ Sprawdź pogodę 1–2 dni przed — przesuń aktywności plenerowe na suchsze dni.</li>
+        <li>✅ Weź gotówkę — małe karczmy i parkingi nie zawsze przyjmują karty.</li>
+        <li>⚠️ <b>Nie planuj wnętrza zapory</b> z dzieckiem (~100 schodów, 7°C, tylko dorośli z dokumentem). Wybierz spacer koroną + gondolę.</li>
+      </ul>
+    </div>
+  </section>
+</div>
+
+<!-- ============ PLAN DNIA ============ -->
+<div class="panel" id="plan">
+  <div class="sec-head"><span class="num">★</span><h2>Gotowy plan na każdy dzień</h2></div>
+  <p class="lead">Tempo żywsze (2–3 punkty dziennie), ale z buforem na drzemki i karmienie. Każdy dzień ma <b>plan B na deszcz</b> i linki do trasy w Google Maps.</p>
+  <div id="daysWrap"></div>
+</div>
+
+<!-- ============ ATRAKCJE ============ -->
+<div class="panel" id="atrakcje">
+  <div class="sec-head"><span class="num">📍</span><h2>Atrakcje wokół Ropienki</h2></div>
+  <p class="lead">Filtruj wg pogody i wieku dziecka. Kliknij ★ żeby dodać do listy „chcę zobaczyć". <b>Mapa</b> = lokalizacja, <b>Trasa</b> = nawigacja z Ropienki. Dystanse drogowe (krętymi drogami jest wolniej niż liczy nawigacja).</p>
+  <div class="filters" id="atrFilters">
+    <button class="chip on" data-f="all">Wszystkie</button>
+    <button class="chip" data-f="wozek">♿ Z wózkiem</button>
+    <button class="chip" data-f="indoor">☔ Na deszcz</button>
+    <button class="chip" data-f="kid">👶 Dla maluchów</button>
+    <button class="chip" data-f="near">📏 Do 30 min</button>
+    <button class="chip" data-f="want">★ Chcę zobaczyć</button>
+  </div>
+  <div id="atrWrap"></div>
+</div>
+
+<!-- ============ TRASY ============ -->
+<div class="panel" id="trasy">
+  <section>
+    <div class="sec-head"><span class="num">🛣️</span><h2>Trasy dojazdowe — gotowe linki</h2></div>
+    <p class="lead">Każdy dzień ma predefiniowaną trasę w Google Maps z punktami pośrednimi.</p>
+    <div id="routeDaysWrap"></div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="num">🥾</span><h2>Spacery — z wózkiem</h2></div>
+    <div id="trailWozek"></div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="num">🎒</span><h2>Spacery — z nosidłem</h2></div>
+    <div id="trailNosidlo"></div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="num">🌄</span><h2>Łatwe punkty widokowe</h2></div>
+    <div id="trailWidoki"></div>
+  </section>
+</div>
+
+<!-- ============ JEDZENIE ============ -->
+<div class="panel" id="jedzenie">
+  <div class="sec-head"><span class="num">🍲</span><h2>Gdzie zjeść</h2></div>
+  <p class="lead">Pogrupowane wg czasu dojazdu z Ropienki. Budżet orientacyjny na osobę.</p>
+  <div id="foodWrap"></div>
+
+  <section style="margin-top:24px">
+    <div class="sec-head"><h2 style="font-size:1.2rem">😋 Lokalne specjały do zaliczenia</h2></div>
+    <p class="lead" style="margin-bottom:8px">Kliknij, gdy spróbujesz — odhaczy się (zapis lokalny).</p>
+    <div class="specials" id="specials"></div>
+  </section>
+</div>
+
+<!-- ============ PAKOWANIE ============ -->
+<div class="panel" id="pakowanie">
+  <div class="sec-head"><span class="num">🎒</span><h2>Checklista pakowania</h2></div>
+  <p class="lead">Odhaczaj, dodawaj własne rzeczy. Zapisuje się lokalnie w przeglądarce (na telefonie/po wgraniu na hosting trzyma się na stałe).</p>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:10px;flex-wrap:wrap">
+    <div style="font-weight:800;font-family:'Fraunces';font-size:1.05rem" id="packTotal">Spakowane: 0 / 0</div>
+    <button class="reset" id="resetPack">↺ Wyczyść zaznaczenia</button>
+  </div>
+  <div id="packWrap"></div>
+</div>
+<!-- ============ SZLAKI ============ -->
+<div class="panel" id="szlaki">
+  <div class="sec-head"><span class="num">🥾</span><h2>Szlaki i spacery</h2></div>
+  <p class="lead">12 propozycji od 20-minutowych wodospadów po całodzienne połoniny. Kliknij ★ żeby dodać do ulubionych. Każdy szlak ma link do parkingu w Google Maps i link do pełnego opisu na <b>hasajacezajace.com</b>.</p>
+  <div class="note" style="margin-bottom:18px"><span class="ic">💡</span><span><b>BPN bilet wstępu</b> — wejście na teren Bieszczadzkiego Parku Narodowego jest płatne (ok. 6–7 zł). Wymagane dla szlaków oznaczonych 🌲 BPN.</span></div>
+  <div class="filters" id="hikeFilters">
+    <button class="chip on" data-hf="all">Wszystkie</button>
+    <button class="chip" data-hf="easy">🌿 Łatwe</button>
+    <button class="chip" data-hf="pol">🏔️ Połoniny</button>
+    <button class="chip" data-hf="water">💧 Woda & torf</button>
+    <button class="chip" data-hf="nosidlo">🎒 Z nosidłem</button>
+    <button class="chip" data-hf="drive">🚗 Objazd / deszcz</button>
+    <button class="chip" data-hf="hfav">★ Ulubione</button>
+  </div>
+  <div id="hikeWrap"></div>
+</div>
+
+</main>
+
+<footer>
+  Plan rodzinnego wyjazdu • Bieszczady / Ropienka • 11–14.06.2026<br>
+  Ceny i godziny orientacyjne — potwierdź na stronach atrakcji. Dane: research z 06.2026.
+</footer>
+
+<div class="tabbar" id="tabbar">
+  <button class="active" data-tab="start"><span class="ic">🧭</span>Start</button>
+  <button data-tab="plan"><span class="ic">🗓️</span>Plan</button>
+  <button data-tab="szlaki"><span class="ic">🥾</span>Szlaki</button>
+  <button data-tab="atrakcje"><span class="ic">📍</span>Atrakcje</button>
+  <button data-tab="jedzenie"><span class="ic">🍲</span>Jedzenie</button>
+  <button data-tab="pakowanie"><span class="ic">🎒</span>Bagaż</button>
+</div>
+
+<script>
+/* ---------- storage z fallbackiem (działa po deployu, nie crashuje w podglądzie) ---------- */
+const store={mem:{},get(k){try{return localStorage.getItem(k)}catch(e){return this.mem[k]??null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){this.mem[k]=v}}};
+const gmaps=q=>'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(q);
+const groute=(dest,wps)=>{let u='https://www.google.com/maps/dir/?api=1&origin='+encodeURIComponent('Ropienka, Bieszczady')+'&destination='+encodeURIComponent(dest)+'&travelmode=driving';if(wps&&wps.length)u+='&waypoints='+wps.map(w=>encodeURIComponent(w)).join('|');return u};
+
+/* ---------- DANE: POGODA ---------- */
+const weather=[
+ {day:'Czwartek',date:'11.06',ico:'🌧️',hi:20,lo:10,desc:'Deszcz, możliwe burze',meta:'Opady ~13 mm • wiatr 14 km/h • żółte ostrzeżenie',tip:'Kurtka p.deszczowa + pokrowiec na wózek. Dzień na odpoczynek.'},
+ {day:'Piątek',date:'12.06',ico:'⛅',hi:16,lo:9,desc:'Pochmurno, sucho',meta:'Opady ~0 mm • wiatr 14 km/h • wieczorem przejaśnienia',tip:'Najlepszy dzień! Warstwy + cienka bluza. To dzień na Solinę.',best:true},
+ {day:'Sobota',date:'13.06',ico:'🌦️',hi:18,lo:9,desc:'Zmiennie, przelotnie',meta:'Opady ~3 mm • wiatr 18 km/h',tip:'Kalosze dla rodziców, kombinezon dla dziecka pod ręką.'},
+ {day:'Niedziela',date:'14.06',ico:'🌦️',hi:18,lo:11,desc:'Pochmurno z deszczem',meta:'Opady ~4 mm • wiatr 18 km/h',tip:'Lekki dzień + powrót. Coś ciepłego do picia w termosie.'}
+];
+
+/* ---------- DANE: PLAN DNI ---------- */
+const days=[
+ {n:'Dzień 1 — Czwartek 11.06',sub:'Dojazd + odpoczynek w okolicy',drive:'Gliwice→Ropienka • ~5 h jazdy',route:groute('Ropienka, Bieszczady',['Rzeszów','Sanok']),routeLabel:'Trasa dojazdu z Gliwic',
+   slots:[
+    {when:'9:00–14:30',t:'Przejazd z Gliwic',d:'A4 do Rzeszowa, potem DK19 przez Sanok. 2 postoje: MOP za Tarnowem (przewijanie) i obiad w Rzeszowie.',tags:[]},
+    {when:'15:00',t:'Zakwaterowanie + drzemka',d:'Rozpakowanie, dziecko śpi po drodze — dajcie mu dojść do siebie.',tags:[]},
+    {when:'Popołudnie',t:'Spacer po Ropience',d:'Neogotycki kościół św. Barbary (ufundowany przez nafciarzy) i czynne kiwony naftowe. Płaskie polne drogi.',tags:[['Wózek OK','w']]},
+    {when:'Wieczór',t:'Kolacja',d:'BIESZCZAD.ski w Wańkowej (~6 km) lub kolacja w bazie.',tags:[]}
+   ],
+   planb:'Pełen deszcz? Zostań w bazie po dojeździe, a po południu Karczma + Muzeum Młynarstwa „Młyn" w Ustrzykach (zwiedzanie pod dachem + obiad).'},
+ {n:'Dzień 2 — Piątek 12.06',sub:'Solina i jezioro — dzień flagowy',drive:'Ropienka→Solina • ~40 min (30 km)',route:groute('Zapora Solina',['Polańczyk']),routeLabel:'Trasa do Soliny',
+   slots:[
+    {when:'Rano',t:'Korona zapory w Solinie',d:'Spacer koroną (664 m, widok na jezioro, za darmo) + deptak. Wózek wjedzie.',tags:[['Wózek OK','w']]},
+    {when:'Południe',t:'Kolejka gondolowa na Górę Jawor',d:'Przejazd 5–8 min + wieża widokowa ze SkyWalkiem. Wózek można zabrać (dopłata 10 zł).',tags:[['Wózek OK','w'],['Bilet ~55 zł','n']]},
+    {when:'Popołudnie',t:'Rejs statkiem + obiad',d:'Rejs po Jeziorze Solińskim z deptaka, potem ryba/pstrąg. Karczma Jawor na górze gondoli ma taras z widokiem.',tags:[['Wózek OK','w']]},
+    {when:'Wieczór',t:'Powrót do Ropienki',d:'Kolacja w bazie, wczesny sen po długim dniu.',tags:[]}
+   ],
+   planb:'Deszcz nad Soliną? Zamień na Skansen w Sanoku (wnętrza chałup pod dachem) lub Muzeum BdPN w Ustrzykach + basen Aquarius w Lesku (brodzik dla dzieci).'},
+ {n:'Dzień 3 — Sobota 13.06',sub:'Aktywność lub kultura (wg pogody)',drive:'Ropienka→Uherce ~20 min / →Sanok ~45 min',route:groute('Bieszczadzkie Drezyny Rowerowe Uherce Mineralne'),routeLabel:'Trasa do drezyn (Uherce)',
+   slots:[
+    {when:'Wariant A ☀️',t:'Drezyny rowerowe w Uhercach',d:'Trasa do tunelu (5,5 km, ~1 h). Dziecko jedzie na ławeczce jako 5. pasażer. Rezerwacja online.',tags:[['Słońce','n']]},
+    {when:'Wariant B ☔',t:'Skansen w Sanoku',d:'Największy w Polsce, 38 ha. Wnętrza chałup i galicyjski rynek pod dachem, alejki dla wózka. ~2,5 h.',tags:[['Wózek OK','w'],['Bilet ~28 zł','n']]},
+    {when:'Popołudnie',t:'Obiad + Myczkowce',d:'Obiad w Lesku/Sanoku, potem Park Miniatur Sakralnych + mini-zoo i Ogród Biblijny w Myczkowcach (świetne z dzieckiem).',tags:[['Wózek OK','w'],['Bilet ~10 zł','n']]},
+    {when:'Wieczór',t:'Powrót, kolacja',d:'Spokojny wieczór w bazie.',tags:[]}
+   ],
+   planb:'Cały dzień leje? Chatka Wariatka w Uhercach (dom do góry nogami) + Park Miniatur Myczkowce + kawiarnia. Wszystko częściowo pod dachem.'},
+ {n:'Dzień 4 — Niedziela 14.06',sub:'Lekki spacer + powrót do Gliwic',drive:'Ropienka→Gliwice • ~5 h jazdy',route:groute('Gliwice',['Sanok','Rzeszów']),routeLabel:'Trasa powrotna',
+   slots:[
+    {when:'Rano',t:'Wymeldowanie + spacer',d:'Krótki spacer pożegnalny: cerkiew w Równi lub Hoszowie tuż obok.',tags:[['Wózek OK','w']]},
+    {when:'Po drodze',t:'Postój w Sanoku',d:'Jeśli skansenu nie było — można go zrobić teraz, lub szybki spacer po starówce. Obiad w Rzeszowie.',tags:[]},
+    {when:'Powrót',t:'Jazda do Gliwic',d:'~5 h z przerwami. Zaplanuj postój na karmienie/przewijanie co ~2 h.',tags:[]}
+   ],
+   planb:'Deszcz w drogę? Wydłużony obiad w krytej restauracji w Sanoku/Rzeszowie zamiast spaceru. Żubrów w Mucznem NIE rób w dzień powrotu (1,5 h w przeciwną stronę).'}
+];
+
+/* ---------- DANE: ATRAKCJE ---------- */
+const attractions=[
+ {id:'solina',name:'Zapora i Jezioro Solińskie',dist:'30 km • ~40 min',min:40,price:'Korona gratis',tags:['wozek','kid'],desc:'Największa zapora w Polsce. Spacer koroną (664 m) za darmo, deptak, rejsy. Wnętrze zapory tylko dla dorosłych (~100 schodów, 7°C) — pomiń z dzieckiem.',q:'Zapora Solina'},
+ {id:'gondola',name:'Kolejka gondolowa PKL Solina',dist:'30 km • ~40 min',min:40,price:'~55 zł / 2+2 ~149 zł',tags:['wozek','kid'],desc:'Gondola na Górę Jawor + wieża widokowa ze SkyWalkiem. Złożony wózek za dopłatą 10 zł. Dzieci do 4 lat gratis. Czynna od 9:00.',q:'Kolej Gondolowa Solina PKL'},
+ {id:'drezyny',name:'Bieszczadzkie Drezyny Rowerowe',dist:'18 km • ~20 min',min:20,price:'rezerwacja online',tags:['kid','near'],desc:'Uherce Mineralne. Trasy 5,5–12 km starymi torami. Dziecko jako 5. pasażer na ławeczce. Najlepsze w pogodę.',q:'Bieszczadzkie Drezyny Rowerowe Uherce Mineralne'},
+ {id:'skansen',name:'Skansen — Muzeum Budownictwa Ludowego',dist:'40 km • ~45 min',min:45,price:'~28 zł / do 7 lat gratis',tags:['wozek','indoor','kid'],desc:'Sanok. Największy skansen w Polsce, 38 ha. Wnętrza chałup pod dachem — dobra opcja na deszcz. Parking gratis. Pon. bezpłatnie 8–12.',q:'Muzeum Budownictwa Ludowego Sanok skansen'},
+ {id:'zubry',name:'Pokazowa Zagroda Żubrów Muczne',dist:'70 km • ~1,5 h',min:90,price:'Wstęp gratis',tags:['wozek','kid'],desc:'Żubry w naturalnej zagrodzie (7 ha), tarasy dla wózka. Czynne 9–19. ⚠️ Bywa zamknięta — zadzwoń (13 461 00 10). Daleko = całodzienna wyprawa.',q:'Pokazowa Zagroda Żubrów Muczne'},
+ {id:'kolejka',name:'Bieszczadzka Kolejka Leśna',dist:'55 km • ~1 h',min:60,price:'~36 zł',tags:['kid'],desc:'Majdan k. Cisnej. Zabytkowa wąskotorówka, trasa Majdan–Balnica (9 km, ~2 h). Wózek za dopłatą. Bilety online wyprzedają się!',q:'Bieszczadzka Kolejka Leśna Majdan Cisna'},
+ {id:'myczkowce',name:'Park Miniatur + mini-zoo Myczkowce',dist:'28 km • ~40 min',min:40,price:'~10 zł',tags:['wozek','indoor','kid','near'],desc:'Ośrodek Caritas. Miniatury cerkwi, ogród biblijny i małe zoo. Teren dla wózka, toalety gratis. Świetne z maluchem.',q:'Park Miniatur Sakralnych Myczkowce'},
+ {id:'ustrzyki',name:'Ustrzyki Dolne — miasteczko + muzeum BdPN',dist:'15 km • ~20 min',min:20,price:'muzeum ~12 zł',tags:['indoor','near','kid'],desc:'Muzeum Bieszczadzkiego PN (przyroda, makiety) pod dachem, kawiarnie, sklepy, plac zabaw. Dobra baza na deszcz.',q:'Muzeum Przyrodnicze Bieszczadzkiego Parku Narodowego Ustrzyki Dolne'},
+ {id:'rowniacerkiew',name:'Cerkiew w Równi',dist:'8 km • ~12 min',min:12,price:'z zewnątrz gratis',tags:['near'],desc:'Drewniana cerkiew (XVII/XVIII w.) tuż obok Ropienki. Idealny krótki postój i zdjęcia.',q:'Cerkiew w Równi Bieszczady'},
+ {id:'hoszowcerkiew',name:'Cerkiew św. Mikołaja w Hoszowie',dist:'10 km • ~15 min',min:15,price:'z zewnątrz gratis',tags:['near'],desc:'Malownicza drewniana cerkiew. Krótki przystanek po drodze do Ustrzyk.',q:'Cerkiew Hoszów'},
+ {id:'bezmiechowa',name:'Szybowisko Bezmiechowa',dist:'22 km • ~30 min',min:30,price:'gratis (widok)',tags:[],desc:'Jeden z najpiękniejszych panoramicznych widoków na Bieszczady. Łagodne podejście, czasem szybowce w powietrzu.',q:'Szybowisko Bezmiechowa'},
+ {id:'sobien',name:'Ruiny zamku Sobień',dist:'30 km • ~40 min',min:40,price:'gratis',tags:['kid'],desc:'Krótkie podejście (nosidło) na wzgórze z ruinami i panoramą doliny Sanu. Szybka, satysfakcjonująca wycieczka.',q:'Ruiny zamku Sobień Manasterzec'},
+ {id:'tajemnicza',name:'Park Tematyczny „Tajemnicza Solina"',dist:'30 km • ~40 min',min:40,price:'~65 zł / 2+2 ~185 zł',tags:['kid'],desc:'Na Górze Jawor (przy gondoli). Park rozrywki rodzinny. Otwarcie sezonu od 30.04.2026.',q:'Tajemnicza Solina Park Rozrywki'}
+];
+
+/* ---------- DANE: TRASY SPACEROWE ---------- */
+const trailsWozek=[
+ {h:'Korona zapory + deptak Solina',specs:['kilkaset m','płasko','parking przy deptaku'],p:'Widoki na jezioro, lody i kawa na deptaku. Najłatwiejszy „spacer widokowy" w okolicy.',q:'Zapora Solina'},
+ {h:'Cerkiew w Łopience',specs:['~2,5 km','szuter, łagodnie','parking u wejścia'],p:'Spokojna dolina, odbudowana cerkiew. Wózek terenowy da radę.',q:'Cerkiew Łopienka'},
+ {h:'Dolina Rabskiego Potoku (ścieżka przyr.)',specs:['utwardzona','płasko','parking Rabe'],p:'Ścieżka przyrodnicza przystosowana też dla wózków.',q:'Dolina Rabskiego Potoku Bieszczady'},
+ {h:'Tarasy w Zagrodzie Żubrów (Muczne)',specs:['asfalt od parkingu','łagodnie','parking leśny'],p:'Od parkingu do tarasów widokowych na żubry — wózek OK (ale daleki dojazd).',q:'Pokazowa Zagroda Żubrów Muczne'}
+];
+const trailsNosidlo=[
+ {h:'Wieża widokowa na Holicy',specs:['ścieżka dydaktyczna','przew. niewielkie','~2 h'],p:'Z Ustjanowej szlakiem „Na stokach Żukowa". Łagodnie, świetna panorama z wieży.',q:'Wieża widokowa Holica Ustjanowa'},
+ {h:'Wieża na Jeleniowatym (Muczne)',specs:['1,5–2,2 km','łagodne podejście','ścieżka o żubrach'],p:'Edukacyjna ścieżka, na końcu wieża. Można połączyć z zagrodą żubrów.',q:'Wieża widokowa Jeleniowaty Muczne'},
+ {h:'Bacówka pod Małą Rawką',specs:['~1 km w jedną str.','szuter','~20 min'],p:'Z Przełęczy Wyżniańskiej, krótko, dla nosidła idealne (głębokie Bieszczady).',q:'Bacówka pod Małą Rawką'},
+ {h:'Ruiny zamku Sobień',specs:['krótkie podejście','przew. ~80 m','~20 min'],p:'Szybka wspinaczka na wzgórze, panorama doliny Sanu.',q:'Ruiny zamku Sobień'}
+];
+const trailsWidoki=[
+ {h:'Góra Jawor (gondolą)',specs:['dojazd gondolą','wieża + SkyWalk'],p:'Najwygodniejsza panorama jeziora — bez wysiłku, prosto z gondoli.',q:'Góra Jawor Solina wieża widokowa'},
+ {h:'Punkt widokowy Sawina (Polańczyk)',specs:['łatwy dojazd','~516 m'],p:'Panorama Zalewu Solińskiego.',q:'Punkt widokowy Sawina Polańczyk'},
+ {h:'Taras na serpentynie DK28',specs:['z drogi','bez podejścia'],p:'Panorama Gór Słonnych prosto z parkingu przy drodze.',q:'Punkt widokowy serpentyny Góry Słonne DK28'},
+ {h:'Szybowisko Bezmiechowa',specs:['łagodnie','panorama 180°'],p:'Jeden z najładniejszych widoków w regionie, mało turystów.',q:'Szybowisko Bezmiechowa'}
+];
+
+/* ---------- DANE: JEDZENIE ---------- */
+const food=[
+ {radius:'15',label:'do 15 minut',items:[
+   {n:'BIESZCZAD.ski',loc:'Wańkowa 25c • ~6 km',why:'Restauracja przy stoku, atrakcje dla rodzin (tyrolka, park linowy). Najbliżej bazy.',spec:'Kuchnia regionalna, dania na ciepło',budget:'~40–70 zł/os',q:'BIESZCZAD.ski Wańkowa restauracja'}
+ ]},
+ {radius:'30',label:'do 30 minut (Ustrzyki Dolne)',items:[
+   {n:'Karczma i Muzeum Młynarstwa „Młyn"',loc:'ul. Fabryczna 12, Ustrzyki Dolne',why:'Kultowa, klimatyczna. Ocena ~4,5/5. Czynne 10–22 (kuchnia do 20:30). Tel. 607 477 110.',spec:'Proziaki z twarożkiem, kisełycia, klepak',budget:'~40–60 zł/os',q:'Karczma Młyn Ustrzyki Dolne Fabryczna'},
+   {n:'Karczma „U Gały"',loc:'stacja Gromadzyń, Ustrzyki Dolne',why:'Bardzo wysokie oceny, dania dla dzieci i z ryb.',spec:'Kuchnia bieszczadzka, ryby',budget:'~45–65 zł/os',q:'Karczma U Gały Ustrzyki Dolne Gromadzyń'},
+   {n:'Restauracja Niedźwiadek',loc:'Ustrzyki Dolne',why:'Solidna regionalna kuchnia w centrum.',spec:'Placek po bieszczadzku, kartacze, fuczki, pstrąg',budget:'~40–60 zł/os',q:'Restauracja Niedźwiadek Ustrzyki Dolne'}
+ ]},
+ {radius:'60',label:'do 60 minut (Lesko, Solina, Sanok)',items:[
+   {n:'Mąka i Wino',loc:'Lesko',why:'Kuchnia kresowa w nowoczesnej formie. Czynne 11–19.',spec:'Pierogi, dania kresowe, wino',budget:'~50–80 zł/os',q:'Mąka i Wino Lesko restauracja'},
+   {n:'Karczma Jawor',loc:'górna stacja gondoli, Solina',why:'Taras z widokiem na jezioro — połącz z gondolą.',spec:'Proziaki z serem i szczypiorkiem',budget:'~35–55 zł/os',q:'Karczma Jawor Góra Jawor Solina'},
+   {n:'Tęczowy Pstrąg',loc:'Łączki k. Leska',why:'Świeże ryby prosto z hodowli.',spec:'Pstrąg na wiele sposobów',budget:'~40–60 zł/os',q:'Tęczowy Pstrąg Łączki Lesko'},
+   {n:'Karczma pod Batem / Oberża Zakapior',loc:'Polańczyk',why:'Klimatyczna kuchnia regionalna nad jeziorem.',spec:'Bogracz, kwaśnica, dania myśliwskie',budget:'~45–70 zł/os',q:'Oberża Zakapior Polańczyk'}
+ ]}
+];
+const specials=['Proziaki','Fuczki','Hreczanyki','Knysze','Kisełycia / kwaśnica','Bogracz','Pstrąg z Soliny','Pierogi / pielmieni','Miód bieszczadzki','Piwo Ursa Maior'];
+
+/* ---------- DANE: PAKOWANIE ---------- */
+const packing=[
+ {id:'tata',ic:'🧔',name:'Dla taty',items:['Kurtka przeciwdeszczowa','Buty trekkingowe','Bluza / polar','Czapka','Powerbank + kable','Dokumenty + prawo jazdy','Gotówka (karczmy, parkingi)','Nosidło turystyczne']},
+ {id:'mama',ic:'👩',name:'Dla mamy',items:['Kurtka przeciwdeszczowa','Wygodne buty','Warstwy (koszulki, bluza)','Chusta / szal','Krem z filtrem','Okulary przeciwsłoneczne']},
+ {id:'dziecko',ic:'👶',name:'Dla dziecka (10 mies.)',items:['Ubranka warstwowe','Ciepły kombinezon / polar','Czapeczka + kapelusik','Body zapasowe (dużo)','Pieluchy — duży zapas','Chusteczki nawilżane','Śliniaki','Pokrowiec przeciwdeszczowy na wózek','Moskitiera na wózek','Śpiworek / kocyk','Słoiczki / przekąski','Butelka + woda + termos','Ulubione zabawki','Smoczek (zapas)','Krem na odparzenia','Krem z filtrem dla niemowląt']},
+ {id:'auto',ic:'🚗',name:'Do samochodu',items:['Fotelik (sprawdzony)','Osłonki na okna','Zabawki w zasięgu','Koc','Ładowarka samochodowa','Woda + przekąski','Worki na śmieci','Ręczniki papierowe']},
+ {id:'gory',ic:'🥾',name:'Na górskie spacery',items:['Nosidło','Woda + przekąski','Apteczka podręczna','Peleryny','Telefon naładowany + apka RATUNEK','Mapa offline','Plecak']},
+ {id:'deszcz',ic:'🌧️',name:'Na deszcz',items:['Kalosze','Peleryny / parasol','Pokrowiec na wózek','Zapasowe skarpety','Worki na mokre rzeczy']},
+ {id:'apteczka',ic:'⛑️',name:'Apteczka',items:['Termometr','Paracetamol/ibuprofen dla niemowląt','Sól fizjologiczna','Plastry + opatrunki','Środek odkażający','Krem na ukąszenia','Maść na odparzenia','Elektrolity','Leki własne','Chusteczki dezynfekujące']}
+];
+
+/* ================= RENDER ================= */
+// pogoda
+document.getElementById('weatherRow').innerHTML=weather.map(w=>`
+ <div class="wx ${w.best?'best':''}">
+   <div class="day">${w.day}</div><div class="date">${w.date}</div>
+   <div class="ico">${w.ico}</div>
+   <div class="temp">${w.hi}°<small> / ${w.lo}°</small></div>
+   <div class="meta"><b>${w.desc}</b><br>${w.meta}</div>
+   <div class="tip">🎒 ${w.tip}</div>
+ </div>`).join('');
+
+// countdown
+(function(){const t=new Date('2026-06-11T09:00:00');const now=new Date();const d=Math.ceil((t-now)/86400000);const el=document.getElementById('countdown');el.textContent=d>0?`⏳ Do wyjazdu: ${d} dni`:(d===0?'🚗 Dziś wyjazd!':'🏞️ Miłego pobytu w Bieszczadach!');})();
+
+// plan dni
+document.getElementById('daysWrap').innerHTML=days.map(dd=>`
+ <div class="day">
+   <div class="day-head">
+     <div class="dn">${dd.n}<em>${dd.sub}</em></div>
+     <div class="dmeta">🚗 ${dd.drive}</div>
+   </div>
+   <div class="day-body">
+     ${dd.slots.map(s=>`<div class="slot"><div class="when">${s.when}</div><div class="what"><strong>${s.t}</strong><span>${s.d}</span>${s.tags.length?`<div class="mini">${s.tags.map(t=>`<span class="pill ${t[1]}">${t[0]}</span>`).join('')}</div>`:''}</div></div>`).join('')}
+   </div>
+   <div class="planb"><b>☔ Plan B na deszcz:</b> ${dd.planb}</div>
+   <div class="day-foot">
+     <a class="btn btn-route" href="${dd.route}" target="_blank" rel="noopener">🛣️ ${dd.routeLabel} →</a>
+   </div>
+ </div>`).join('');
+
+// atrakcje
+let wantSet=new Set(JSON.parse(store.get('biesz_want')||'[]'));
+let curFilter='all';
+function saveWant(){store.set('biesz_want',JSON.stringify([...wantSet]))}
+function renderAtr(){
+ const wrap=document.getElementById('atrWrap');
+ const list=attractions.filter(a=>{
+   if(curFilter==='all')return true;
+   if(curFilter==='want')return wantSet.has(a.id);
+   if(curFilter==='near')return a.min<=30;
+   return a.tags.includes(curFilter);
+ });
+ wrap.innerHTML=list.length?list.map(a=>`
+  <div class="atr ${wantSet.has(a.id)?'want':''}">
+   <div class="atr-top">
+     <div><h3>${a.name}</h3></div>
+     <button class="star ${wantSet.has(a.id)?'on':''}" data-id="${a.id}" title="Dodaj do listy">★</button>
+   </div>
+   <div class="tagrow">
+     <span class="tag dist">📍 ${a.dist}</span>
+     ${a.tags.includes('wozek')?'<span class="tag wozek">♿ wózek OK</span>':''}
+     ${a.tags.includes('indoor')?'<span class="tag indoor">☔ na deszcz</span>':''}
+     ${a.tags.includes('kid')?'<span class="tag kid">👶 dla dzieci</span>':''}
+   </div>
+   <p>${a.desc}</p>
+   <div class="actions">
+     <a class="btn btn-map" href="${gmaps(a.q)}" target="_blank" rel="noopener">📍 Mapa</a>
+     <a class="btn btn-route" href="${groute(a.q)}" target="_blank" rel="noopener">🧭 Trasa z Ropienki</a>
+     <span class="price">💰 ${a.price}</span>
+   </div>
+  </div>`).join(''):`<div class="card" style="text-align:center;color:var(--ink-soft)">Brak miejsc w tym filtrze. ${curFilter==='want'?'Dodaj coś gwiazdką ★ w widoku „Wszystkie".':''}</div>`;
+ wrap.querySelectorAll('.star').forEach(b=>b.onclick=()=>{const id=b.dataset.id;wantSet.has(id)?wantSet.delete(id):wantSet.add(id);saveWant();renderAtr();});
+}
+document.getElementById('atrFilters').querySelectorAll('.chip').forEach(c=>c.onclick=()=>{
+ document.querySelectorAll('#atrFilters .chip').forEach(x=>x.classList.remove('on'));c.classList.add('on');curFilter=c.dataset.f;renderAtr();
+});
+renderAtr();
+
+// trasy spacerowe
+const renderTrails=(arr,el,cls)=>document.getElementById(el).innerHTML=arr.map(t=>`
+ <div class="trail ${cls||''}">
+   <h4>${t.h}</h4>
+   <div class="specs">${t.specs.map(s=>`<span class="pill">${s}</span>`).join('')}</div>
+   <p>${t.p}</p>
+   <a class="btn btn-map" style="margin-top:8px" href="${gmaps(t.q)}" target="_blank" rel="noopener">📍 Mapa</a>
+ </div>`).join('');
+renderTrails(trailsWozek,'trailWozek','');
+renderTrails(trailsNosidlo,'trailNosidlo','n');
+renderTrails(trailsWidoki,'trailWidoki','');
+
+// route days (trasy dojazdowe)
+document.getElementById('routeDaysWrap').innerHTML=days.map(d=>`
+ <div class="routeday">
+   <h3>${d.n.split('—')[0].trim()} <span style="font-weight:500;color:var(--ink-soft)">— ${d.sub}</span></h3>
+   <div class="path">🚗 <b>${d.drive}</b></div>
+   <a class="btn btn-route" href="${d.route}" target="_blank" rel="noopener">🛣️ Otwórz trasę w Google Maps →</a>
+ </div>`).join('');
+
+// jedzenie
+document.getElementById('foodWrap').innerHTML=food.map(g=>`
+ <div class="radius-h"><div class="ring">${g.radius}'</div><h3>${g.label}</h3></div>
+ ${g.items.map(f=>`
+   <div class="card">
+     <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px">
+       <div><h3 style="font-size:1.1rem;font-weight:900">${f.n}</h3><div style="font-size:.8rem;color:var(--ink-soft)">📍 ${f.loc}</div></div>
+       <span class="price" style="white-space:nowrap">💰 ${f.budget}</span>
+     </div>
+     <p style="font-size:.88rem;color:var(--ink-soft);margin:8px 0">${f.why}</p>
+     <div style="font-size:.82rem;margin-bottom:10px"><b>Specjalności:</b> ${f.spec}</div>
+     <a class="btn btn-map" href="${gmaps(f.q)}" target="_blank" rel="noopener">📍 Mapa</a>
+   </div>`).join('')}
+`).join('');
+
+// specjały
+let tasted=new Set(JSON.parse(store.get('biesz_tasted')||'[]'));
+function renderSpec(){
+ const el=document.getElementById('specials');
+ el.innerHTML=specials.map((s,i)=>`<span class="spec ${tasted.has(i)?'on':''}" data-i="${i}">${tasted.has(i)?'✓ ':''}${s}</span>`).join('');
+ el.querySelectorAll('.spec').forEach(sp=>sp.onclick=()=>{const i=+sp.dataset.i;tasted.has(i)?tasted.delete(i):tasted.add(i);store.set('biesz_tasted',JSON.stringify([...tasted]));renderSpec();});
+}
+renderSpec();
+
+// pakowanie
+function packState(){try{return JSON.parse(store.get('biesz_pack')||'{}')}catch(e){return {}}}
+function customItems(){try{return JSON.parse(store.get('biesz_pack_custom')||'{}')}catch(e){return {}}}
+function saveState(s){store.set('biesz_pack',JSON.stringify(s))}
+function saveCustom(c){store.set('biesz_pack_custom',JSON.stringify(c))}
+
+function renderPack(){
+ const state=packState();const custom=customItems();
+ let totalAll=0,doneAll=0;
+ document.getElementById('packWrap').innerHTML=packing.map(cat=>{
+   const all=[...cat.items,...(custom[cat.id]||[])];
+   const done=all.filter(it=>state[cat.id+'::'+it]).length;
+   totalAll+=all.length;doneAll+=done;
+   const pct=all.length?Math.round(done/all.length*100):0;
+   return `<div class="pack-cat" data-cat="${cat.id}">
+     <div class="pack-head">
+       <span class="pic">${cat.ic}</span>
+       <div class="pt"><h3>${cat.name}</h3><div class="pg">${done}/${all.length} spakowane</div><div class="pbar"><i style="width:${pct}%"></i></div></div>
+       <span class="arr">▸</span>
+     </div>
+     <div class="pack-list">
+       ${all.map(it=>{const key=cat.id+'::'+it;const ch=!!state[key];const isCustom=(custom[cat.id]||[]).includes(it);
+         return `<div class="pitem ${ch?'done':''}"><input type="checkbox" ${ch?'checked':''} data-key="${key}"><label>${it}</label>${isCustom?`<button class="del" data-cat="${cat.id}" data-it="${it}">✕</button>`:''}</div>`}).join('')}
+       <div class="addrow"><input type="text" placeholder="Dodaj własną rzecz…" data-add="${cat.id}"><button data-addbtn="${cat.id}">+ Dodaj</button></div>
+     </div>
+   </div>`;
+ }).join('');
+ document.getElementById('packTotal').textContent=`Spakowane: ${doneAll} / ${totalAll}`;
+ bindPack();
+}
+function bindPack(){
+ document.querySelectorAll('.pack-head').forEach(h=>h.onclick=e=>{if(e.target.closest('.pitem'))return;h.parentElement.classList.toggle('open')});
+ document.querySelectorAll('.pitem input').forEach(c=>c.onclick=e=>{e.stopPropagation();const s=packState();s[c.dataset.key]=c.checked;if(!c.checked)delete s[c.dataset.key];saveState(s);const cat=c.closest('.pack-cat');const wasOpen=cat.classList.contains('open');renderPack();if(wasOpen)document.querySelector(`.pack-cat[data-cat="${cat.dataset.cat}"]`).classList.add('open')});
+ document.querySelectorAll('.del').forEach(b=>b.onclick=e=>{e.stopPropagation();const c=customItems();c[b.dataset.cat]=(c[b.dataset.cat]||[]).filter(x=>x!==b.dataset.it);saveCustom(c);const s=packState();delete s[b.dataset.cat+'::'+b.dataset.it];saveState(s);const cat=b.dataset.cat;renderPack();document.querySelector(`.pack-cat[data-cat="${cat}"]`).classList.add('open')});
+ document.querySelectorAll('[data-addbtn]').forEach(btn=>{
+   const cat=btn.dataset.addbtn;const inp=document.querySelector(`[data-add="${cat}"]`);
+   const add=()=>{const v=inp.value.trim();if(!v)return;const c=customItems();c[cat]=c[cat]||[];if(!c[cat].includes(v)&&!packing.find(p=>p.id===cat).items.includes(v)){c[cat].push(v);saveCustom(c)}renderPack();document.querySelector(`.pack-cat[data-cat="${cat}"]`).classList.add('open');const ni=document.querySelector(`[data-add="${cat}"]`);if(ni){ni.focus()}};
+   btn.onclick=e=>{e.stopPropagation();add()};
+   inp.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();add()}};
+   inp.onclick=e=>e.stopPropagation();
+ });
+}
+document.getElementById('resetPack').onclick=()=>{if(confirm('Wyczyścić wszystkie zaznaczenia (własne rzeczy zostaną)?')){saveState({});renderPack()}};
+renderPack();
+
+/* ================= SZLAKI ================= */
+const hikes=[
+ /* --------- ŁATWE / KRÓTKIE --------- */
+ {id:'szepit',name:'Wodospad Szepit (Hylaty)',cat:['easy','water','nosidlo'],
+  diff:'easy',diffLabel:'Łatwy',
+  dist:'~45 km • ~55 min od Ropienki',
+  trail:'~1,5 km w jedną stronę (3 km p/p)',time:'20–30 min w jedną stronę',
+  elev:'niemal płasko, minimalne podejście',
+  start:'Parking przy centrum wsi Zatwarnica',
+  baby:'Nosidło idealne — szuter, nie polecamy wózka nieturystycznego',
+  tags:['easy','water','nosidlo'],
+  bdg:[],
+  desc:'Największy wodospad w Bieszczadach (~8 m). Ścieżka historyczno-przyrodnicza „Hylaty" wiedzie głównie szutrową drogą — łatwa i płaska. Krajobraz doliny Sanu w tle. Świetny na krótki popołudniowy spacer.',
+  park:'Zatwarnica Bieszczady parking',
+  src:'https://hasajacezajace.com/bieszczady/'},
+ {id:'siklawa',name:'Wodospad Siklawa Ostrowskich — Wetlina',cat:['easy','water','nosidlo'],
+  diff:'easy',diffLabel:'Łatwy',
+  dist:'~60 km • ~1,25 h od Ropienki',
+  trail:'~0,8 km',time:'15 min w jedną stronę',
+  elev:'płasko',
+  start:'Centrum wsi Wetlina, parking przy drodze',
+  baby:'Nosidło OK — krótka, płaska ścieżka',
+  tags:['easy','water','nosidlo'],
+  bdg:[],
+  desc:'Jeden z bardziej znanych wodospadów Bieszczad — woda potoku Słowiański spada ~5 m z jednej kaskady. Pięknie ukryty w lesie, dojście jest darmowe i bez żadnego szlaku — po prostu się idzie.',
+  park:'Wetlina Bieszczady parking wodospad',
+  src:'https://hasajacezajace.com/bieszczady/'},
+ {id:'tarnawa',name:'Torfowisko Tarnawa Wyżna 🌲 BPN',cat:['easy','water','nosidlo'],
+  diff:'easy',diffLabel:'Łatwy — kładki',
+  dist:'~65 km • ~1,5 h od Ropienki',
+  trail:'600 m (krótsza pętla) lub 1,8 km (dłuższa)',time:'30–60 min',
+  elev:'płasko (kładki po torfowisku)',
+  start:'Parking przy Tarnawie Wyżnej (płatny w sezonie ~5 zł)',
+  baby:'Wózek (turystyczny) i nosidło OK — twarde kładki nad bagnem',
+  tags:['easy','water','nosidlo'],
+  bdg:['🌲 BPN'],
+  desc:'Unikalny ekosystem torfowiskowy w głębokich Bieszczadach. Drewniane kładki nad bagnem z widokiem na połoniny. Rosiczki, bagienne mchy, cisza absolutna. Można połączyć z Zagrodą Żubrów w Mucznem (~5 km dalej). Ekologiczna perła Bieszczadzkiego PN.',
+  park:'Torfowisko Tarnawa Wyżna parking',
+  src:'https://hasajacezajace.com/torfowisko-tarnawa-bieszczady/'},
+ {id:'duszatyn',name:'Jeziorka Duszatyńskie',cat:['easy','water','nosidlo'],
+  diff:'easy',diffLabel:'Łatwy',
+  dist:'~45 km • ~55 min od Ropienki',
+  trail:'~3 km pętla',time:'~1 h',
+  elev:'łagodne (~80 m)',
+  start:'Parking przy wsi Duszatyn (nieopłacalny)',
+  baby:'Nosidło idealne',
+  tags:['easy','water','nosidlo'],
+  bdg:[],
+  desc:'Dwa jeziorka osuwiskowe powstałe w 1907 r. po wielkim spłynięciu zachodniej ściany Chryszczatej (~12 mln m³ ziemi). Jedno z najbardziej osobliwych miejsc w Bieszczadach — trochę jak Dolina Zielonego Stawu, ale bez tłumów. Ciekawa historia geologiczna.',
+  park:'Jeziorka Duszatyńskie Duszatyn parking',
+  src:'https://hasajacezajace.com/bieszczady/'},
+ {id:'sobien',name:'Ruiny zamku Sobień — Manasterzec',cat:['easy','nosidlo'],
+  diff:'easy',diffLabel:'Łatwy (krótkie podejście)',
+  dist:'~30 km • ~40 min od Ropienki',
+  trail:'~1,2 km p/p',time:'25–35 min',
+  elev:'~80 m',
+  start:'Parking przy wsi Manasterzec',
+  baby:'Nosidło OK — krótkie, wyraźna ścieżka',
+  tags:['easy','nosidlo'],
+  bdg:[],
+  desc:'Ruiny XIV-wiecznego zamku rycerskiego na wzgórzu nad doliną Sanu. Piękna panorama rzeki, wzniesień i okolicznych wsi. Blisko Ropienki — idealne na popołudniową wycieczkę bez dużego wysiłku. Zimą i po deszczu może być ślisko.',
+  park:'Ruiny zamku Sobień Manasterzec parking',
+  src:'https://hasajacezajace.com/bieszczady/'},
+ {id:'sinewiry',name:'Rezerwat Sine Wiry',cat:['easy','water','nosidlo'],
+  diff:'easy',diffLabel:'Łatwy',
+  dist:'~45 km • ~1 h od Ropienki',
+  trail:'~4 km p/p',time:'~1,5 h',
+  elev:'minimalne',
+  start:'Parking przy Brzegach Górnych lub Wetlinie',
+  baby:'Nosidło OK — leśna dolina, szeroka ścieżka',
+  tags:['easy','water','nosidlo'],
+  bdg:[],
+  desc:'Wąwóz i dolina rzeki Wetlinki — piękne skalne progi, głęboki las bukowy. To tutaj kręcono serial „Wataha". Widowiskowe miejsca przy potoku, zacisze i dzika przyroda. Można połączyć z krótkim spacerem do wodospadu Siklawa.',
+  park:'Sine Wiry Wetlina rezerwat parking',
+  src:'https://hasajacezajace.com/bieszczady/'},
+ /* --------- POŁONINY --------- */
+ {id:'rawka-mala',name:'Mała Rawka z Przełęczy Wyżniańskiej 🌲 BPN',cat:['pol','nosidlo'],
+  diff:'med',diffLabel:'Umiarkowany',
+  dist:'~60 km • ~1,25 h od Ropienki',
+  trail:'~6 km p/p',time:'~2–2,5 h',
+  elev:'~300 m',
+  start:'Parking na Przełęczy Wyżniańskiej (przy serpentynach przed Wetliną)',
+  baby:'Nosidło — wymagające, ale bardzo widokowe. Dla sprawnej rodziny.',
+  tags:['pol','nosidlo'],
+  bdg:['🌲 BPN'],
+  desc:'Najkrótsze wejście na pierwszą połoninę — szlak zielony z Przełęczy Wyżniańskiej. Łagodne podejście, a widoki robią piorunujące wrażenie już od początku. Idealna trasa jeśli chcecie smak połoniny bez wielkiego wysiłku. Bacówka w połowie drogi (25 min od parkingu).',
+  park:'Przełęcz Wyżniańska parking Wetlina szlak',
+  src:'https://hasajacezajace.com/mala-i-wielka-rawka-bieszczady/'},
+ {id:'rawki',name:'Mała i Wielka Rawka — pełna trasa 🌲 BPN',cat:['pol','nosidlo'],
+  diff:'med',diffLabel:'Umiarkowany',
+  dist:'~60 km • ~1,25 h od Ropienki',
+  trail:'~8–9 km',time:'~3–4 h',
+  elev:'~480 m',
+  start:'Parking na Przełęczy Wyżniańskiej',
+  baby:'Nosidło — ambitne z niemowlakiem (długi dzień). Jeden z nagród i wymagań.',
+  tags:['pol','nosidlo'],
+  bdg:['🌲 BPN'],
+  desc:'Połączenie obu Rawek — cudowna trasa widokowa przez pasmo połonin. Droga szlaku jest „niespecjalnie mecząca, za to szalenie widokowa" (wg hasajacezajace). Bacówka pod Małą Rawką to dobry punkt na postój i karmienie. Serpentyny przy drodze do Wetliny robią wrażenie.',
+  park:'Przełęcz Wyżniańska parking Bieszczady',
+  src:'https://hasajacezajace.com/mala-i-wielka-rawka-bieszczady/'},
+ {id:'carynska',name:'Połonina Caryńska z Ustrzyk Górnych 🌲 BPN',cat:['pol','nosidlo'],
+  diff:'med',diffLabel:'Umiarkowany',
+  dist:'~55 km • ~1,25 h od Ropienki',
+  trail:'~7,5 km p/p',time:'~3–4 h',
+  elev:'~450 m',
+  start:'Parking w Ustrzykach Górnych (Kremenaros)',
+  baby:'Nosidło — realne z niemowlakiem. Czerwony szlak, długi ale nie stromy.',
+  tags:['pol','nosidlo'],
+  bdg:['🌲 BPN'],
+  desc:'Czerwony szlak przez Połoninę Caryńską to jeden z najpiękniejszych w całych Bieszczadach — „ma się całe Bieszczady dosłownie na dłoni". Łagodne podejście z Ustrzyk Górnych, wejście przez Przełęcz Berehy Górne. Można skrócić do Przełęczy i wrócić tą samą drogą.',
+  park:'Ustrzyki Górne parking BPN Kremenaros',
+  src:'https://hasajacezajace.com/polonina-carynska-szlak-z-ustrzyk-gornych/'},
+ {id:'wetlinska',name:'Połonina Wetlińska + Chatka Puchatka 🌲 BPN',cat:['pol','nosidlo'],
+  diff:'hard',diffLabel:'Wymagający (długi)',
+  dist:'~65 km • ~1,5 h od Ropienki',
+  trail:'~11 km p/p',time:'~4–5 h',
+  elev:'~530 m',
+  start:'Parking w Wetlinie (centrum, przy sklepie ABC)',
+  baby:'Nosidło — trudne z niemowlakiem (długi dzień). Tylko dla ambitnych i sprawnych.',
+  tags:['pol','nosidlo'],
+  bdg:['🌲 BPN'],
+  desc:'„Chyba jedne z najpiękniejszych widoków w całym Bieszczadzkim Parku Narodowym" — szczyt 1228 m, panorama na wszystkie strony. Chatka Puchatka w remoncie, ale zbocza połoniny są wspaniałe o każdej porze. Czerwony szlak. Można też wejść z Przysłupu (krótszy dojazd).',
+  park:'Wetlina parking szlak połonina BPN',
+  src:'https://hasajacezajace.com/polonina-wetlinska-oraz-chatka-puchatka/'},
+ {id:'bukoweberdo',name:'Bukowe Berdo — Pszczeliny 🌲 BPN',cat:['pol','nosidlo'],
+  diff:'med',diffLabel:'Umiarkowany',
+  dist:'~50 km • ~1,25 h od Ropienki',
+  trail:'~8 km p/p',time:'~3–3,5 h',
+  elev:'~450 m',
+  start:'Parking w Pszczeliny (wjazd od Lutowisk)',
+  baby:'Nosidło — dobra proporcja wysiłek/widoki, mniej tłoczna trasa.',
+  tags:['pol','nosidlo'],
+  bdg:['🌲 BPN'],
+  desc:'„Jeden z najpiękniejszych szlaków bieszczadzkich" (hasajacezajace). Przebieg przez grzbiet z mieszanymi widokami na połoniny i lasy. Mniej popularny niż Caryńska czy Wetlińska, więc spokojniej. Żółty szlak ze świetną panoramą na ukraińską część Bieszczadów.',
+  park:'Pszczeliny Bukowe Berdo parking BPN',
+  src:'https://hasajacezajace.com/bukowe-berdo-bieszczady/'},
+ {id:'tarnica',name:'Tarnica z Wołosatego 🌲 BPN',cat:['pol','nosidlo'],
+  diff:'hard',diffLabel:'Wymagający',
+  dist:'~60 km • ~1,5 h od Ropienki',
+  trail:'~5 km w jedną stronę (10 km p/p)',time:'~2,5 h w górę',
+  elev:'~490 m',
+  start:'Parking przy Wołosatem (płatny ~10 zł)',
+  baby:'Nosidło — długi wymagający dzień. Tylko jeśli dziecko bardzo dobrze znosi nosidło.',
+  tags:['pol','nosidlo'],
+  bdg:['🌲 BPN','⭐ Najwyższy szczyt'],
+  desc:'Tarnica 1346 m n.p.m. — najwyższy szczyt w polskiej części Bieszczadów, zwana też Górą Trzech Krzyży. Niebieski szlak z Wołosatego to najkrótsze wejście — przez las, potem otwarte połoniny z panoramą na trzy kraje. Warto! Z niemowlakiem to ponad 5-godzinny wypad.',
+  park:'Wołosate parking Tarnica BPN',
+  src:'https://hasajacezajace.com/tarnica-najkrotszy-szlak/'},
+ /* --------- OBJAZDY / PRZEJAZDY --------- */
+ {id:'petla',name:'Wielka Pętla Bieszczadzka — przejazd samochodem',cat:['drive'],
+  diff:'easy',diffLabel:'Przejazd samochodem',
+  dist:'start z Leska • ~144 km pętli',
+  trail:'144 km — trasa samochodowa',time:'~3–4 h (bez postojów)',
+  elev:'zróżnicowane',
+  start:'Lesko rynek → Baligród → Cisna → Wetlina → Ustrzyki Górne → Lutowiska → Lesko',
+  baby:'Idealne dla dziecka — śpi w foteliku, rodzice podziwiają widoki.',
+  tags:['drive'],
+  bdg:['🚗 Samochodem','☔ Na deszcz'],
+  desc:'144-kilometrowa trasa samochodowa przez najpiękniejsze fragmenty Bieszczadów. Przejeżdża przez Ciśniańsko-Wetliński Park Krajobrazowy, BPN, Park Krajobrazowy Doliny Sanu i Gór Słonnych. Kluczowe punkty po drodze: serpentyny przed Rawkami, widoki z Przełęczy Wyżniańskiej, Ustrzyki Górne, Lutowiska. Można robić postoje na kawę i krótkie spacery bez przemieszczania się pieszo przez cały dzień. Rewelacja na zachmurzony dzień.',
+  park:'Lesko rynek parking',
+  src:'https://hasajacezajace.com/bieszczady/'},
+ {id:'wataha',name:'Szlak śladami serialu „Wataha" HBO',cat:['drive'],
+  diff:'easy',diffLabel:'Przejazd z przystankami',
+  dist:'różny • od ~40 km',
+  trail:'krótkie spacery przy każdym punkcie',time:'~2–3 h (cały obwód)',
+  elev:'minimalne',
+  start:'Sine Wiry → Most w Huzelach → Dolina Sanu (Procisne) → Ustrzyki Górne',
+  baby:'Wózek i nosidło OK — przy każdym punkcie krótko i płasko',
+  tags:['drive','easy'],
+  bdg:['🎬 Serial HBO','☔ Na deszcz'],
+  desc:'Trasa śladami serialu Wataha (HBO) — emitowanego w 19 krajach jednocześnie. Kluczowe lokacje: Rezerwat Sine Wiry (wąwóz Wetlinki — najbardziej rozpoznawalne ujęcia), most na Sanie w Huzelach, dolina Sanu koło Procisnego, placówka Straży Granicznej w Ustrzykach Górnych, Jezioro Solińskie z zaporą. Każde miejsce jest piękne samo w sobie — serial to świetny pretekst.',
+  park:'Sine Wiry Wetlina parking rezerwat',
+  src:'https://hasajacezajace.com/bieszczady/'},
+ /* --------- CIEKAWOSTKI / KRÓTKIE POSTOJE --------- */
+ {id:'muzwegla',name:'Muzeum Wypału Węgla Drzewnego — Lutowiska',cat:['easy'],
+  diff:'easy',diffLabel:'Plenerowe (15 min)',
+  dist:'~55 km • ~1,25 h od Ropienki',
+  trail:'~200 m',time:'~15–20 min',
+  elev:'płasko',
+  start:'Centrum Lutowisk, przy drodze',
+  baby:'Wózek i nosidło — płaski teren, bardzo krótko',
+  tags:['easy'],
+  bdg:['🆓 Gratis','Połącz z Tarnawą'],
+  desc:'Plenerowe muzeum dokumentujące tradycję wypalania węgla drzewnego w Bieszczadach — wielowiekowego rzemiosła tego regionu. Rekonstrukcja mielera i tablice historyczne. Samo w sobie to ~15 minut, ale leży 5 km przed Torfowiskiem Tarnawa — obowiązkowy postój w tamtym kierunku.',
+  park:'Muzeum Wypału Węgla Drzewnego Lutowiska Bieszczady',
+  src:'https://hasajacezajace.com/bieszczady/'},
+ {id:'klasztorzagorz',name:'Ruiny Klasztoru Karmelitów — Zagórz',cat:['easy'],
+  diff:'easy',diffLabel:'Łatwy',
+  dist:'~35 km • ~40 min od Ropienki',
+  trail:'~500 m do ruin',time:'~30–45 min',
+  elev:'~40 m',
+  start:'Parking centrum Zagórza, potem spacer pod górę',
+  baby:'Nosidło — krótka, wyraźna ścieżka',
+  tags:['easy'],
+  bdg:['🆓 Gratis','⭐ Niedocenione'],
+  desc:'Monumentalne późnobarokowe ruiny kościoła i klasztoru warownego na Górze Mariemont — jeden z nielicznych takich obiektów w Polsce. Wybudowany na pocz. XVIII w., doszczętnie spalony w 1822 r. (podobno podczas kłótni przeora z zakonnikiem). Imponujące mury, zero tłumów, świetne zdjęcia. Zagórz leży przy drodze z Sanoka — idealny postój w drodze.',
+  park:'Ruiny Klasztoru Karmelitów Zagórz',
+  src:'https://hasajacezajace.com/bieszczady/'},
+ {id:'smolnik',name:'Cerkiew bojkowska w Smolniku (UNESCO)',cat:['easy'],
+  diff:'easy',diffLabel:'Postój przy drodze',
+  dist:'~45 km • ~55 min od Ropienki',
+  trail:'plac przed cerkwią',time:'~20 min',
+  elev:'płasko',
+  start:'Wieś Smolnik, przy drodze na Ustrzyki Górne',
+  baby:'Wózek i nosidło — płasko, przy drodze',
+  tags:['easy'],
+  bdg:['🆓 Z zewnątrz gratis','🌍 Lista UNESCO'],
+  desc:'Jedyna w Bieszczadach cerkiew w stylu bojkowskim — drewniana, XVIII-wieczna, wpisana na Listę Światowego Dziedzictwa UNESCO (jako część wpisu „Drewniane cerkwie w polskim i ukraińskim regionie Karpat"). Leży przy trasie na Ustrzyki Górne i Wetlinę — naturalny postój w drodze.',
+  park:'Cerkiew Smolnik Bieszczady',
+  src:'https://hasajacezajace.com/bieszczady/'},
+ {id:'michniowiec',name:'Cerkiew Narodzenia Bogurodzicy — Michniowiec',cat:['easy'],
+  diff:'easy',diffLabel:'Postój przy drodze',
+  dist:'~55 km • ~1,25 h od Ropienki',
+  trail:'plac przed cerkwią',time:'~20 min',
+  elev:'płasko',
+  start:'Wieś Michniowiec',
+  baby:'Wózek i nosidło OK',
+  tags:['easy'],
+  bdg:['⭐ Polichromia wewnątrz'],
+  desc:'Piękna drewniana cerkiew szczególnie godna uwagi od środka — unikalne polichromie pod kopułą robią ogromne wrażenie. Leży po drodze na Wetlinę lub Cisną. Warto wejść do środka jeśli otwarta.',
+  park:'Cerkiew Michniowiec Bieszczady',
+  src:'https://hasajacezajace.com/bieszczady/'},
+ {id:'zrodlasanu',name:'Źródła Sanu — Bieszczadzki Worek 🌲 BPN',cat:['pol','nosidlo'],
+  diff:'hard',diffLabel:'Wymagający (dziki)',
+  dist:'~80 km • ~2 h od Ropienki',
+  trail:'~25 km (cała pętla) / ~10 km (krótszy wariant do Beniowej)',time:'cały dzień',
+  elev:'~300 m',
+  start:'Parking Muczne lub Tarnawa Niżna',
+  baby:'Nosidło — tylko dla doświadczonych. Najdzikszy rejon BPN.',
+  tags:['pol','nosidlo'],
+  bdg:['🌲 BPN','⚠️ Dziki teren'],
+  desc:'Szlak w najdzikszy i najbardziej bezludny rejon Bieszczadów — Bieszczadzki Worek. Trasa wiedzie przez nieistniejące wsie Bukowiec, Beniową i Sianki aż do miejsca gdzie jeden z dopływów Sanu bierze początek, nieopodal Przełęczy Użockiej (granica z Ukrainą). Absolutna cisza. Z niemowlakiem polecamy tylko krótszy wariant do Beniowej i powrót tą samą drogą.',
+  park:'Muczne parking szlak BPN Bieszczady',
+  src:'https://hasajacezajace.com/bieszczady/'}
+];
+
+let hikeFavs=new Set(JSON.parse(store.get('biesz_hfav')||'[]'));
+let curHFilter='all';
+function saveHFavs(){store.set('biesz_hfav',JSON.stringify([...hikeFavs]))}
+
+function renderHikes(){
+ const wrap=document.getElementById('hikeWrap');
+ const list=hikes.filter(function(h){
+   if(curHFilter==='all')return true;
+   if(curHFilter==='hfav')return hikeFavs.has(h.id);
+   return h.tags.indexOf(curHFilter)>=0;
+ });
+ if(!list.length){wrap.innerHTML='<div class="card" style="text-align:center;color:var(--ink-soft)">Brak tras w tym filtrze.'+(curHFilter==='hfav'?' Dodaj coś gwiazdką ★.':'')+'</div>';return;}
+ var html='',lastGrp='';
+ var grpOf=function(h){
+   if(h.tags.indexOf('drive')>=0)return 'drive';
+   if(h.diff==='easy')return 'easy';
+   if(h.diff==='med')return 'med';
+   return 'hard';
+ };
+ var grpMeta={
+   drive:{ico:'🚗',title:'Objazdy i przejazdy samochodem',sub:'Na deszczowy dzień lub gdy nogi odmawiają posłuszeństwa'},
+   easy:{ico:'🌿',title:'Łatwe spacery i krótkie postoje',sub:'Doskonałe z nosidłem — od 15 minut do 1,5 godz.'},
+   med:{ico:'🏔️',title:'Połoniny — umiarkowane (3–4 h)',sub:'Dla sprawnej rodziny z nosidłem, widoki gwarantowane'},
+   hard:{ico:'⛰️',title:'Wymagające — długi dzień (4–5+ h)',sub:'Tylko jeśli dziecko bardzo dobrze znosi nosidło'}
+ };
+ list.forEach(function(h){
+   var g=grpOf(h);
+   if(curHFilter==='all'&&g!==lastGrp){
+     var m=grpMeta[g];
+     html+='<div class="cat-hdr"><span class="cico">'+m.ico+'</span><div><h2>'+m.title+'</h2><div class="csub">'+m.sub+'</div></div></div>';
+     lastGrp=g;
+   }
+   var distVal=h.dist.split('\u2022')[0].trim();
+   var timeVal=h.time.split('\u2013')[0].replace('~','').trim();
+   var elevVal=(h.elev.indexOf('p\u0142asko')>=0||h.elev.indexOf('k\u0142adki')>=0)?'p\u0142asko':h.elev;
+   html+='<div class="hike'+(hikeFavs.has(h.id)?' fav':'')+'">'+
+     '<div class="hike-top">'+
+       '<div>'+
+         '<span class="diff '+h.diff+'">● '+h.diffLabel+'</span>'+
+         '<h3>'+h.name+'</h3>'+
+       '</div>'+
+       '<button class="hstar'+(hikeFavs.has(h.id)?' on':'')+'" data-hid="'+h.id+'">★</button>'+
+     '</div>'+
+     '<div class="hike-bar">'+
+       '<div class="hb"><div class="hbv">'+h.trail.split(',')[0].split('(')[0].replace('~','').trim().split(' ').slice(0,2).join(' ')+'</div><div class="hbl">dystans</div></div>'+
+       '<div class="hb"><div class="hbv">'+timeVal+'</div><div class="hbl">min. czas</div></div>'+
+       '<div class="hb"><div class="hbv">'+elevVal+'</div><div class="hbl">przewyższenie</div></div>'+
+       '<div class="hb"><div class="hbv">'+distVal+'</div><div class="hbl">od Ropienki</div></div>'+
+     '</div>'+
+     '<div class="hike-meta">'+
+       '<span class="hm dist">📍 '+h.dist+'</span>'+
+       '<span class="hm baby">'+h.baby.split('\u2014')[0].split('!')[0].trim()+'</span>'+
+       h.bdg.map(function(b){return '<span class="hm bdg">'+b+'</span>';}).join('')+
+     '</div>'+
+     '<p>'+h.desc+'</p>'+
+     '<p style="font-size:.8rem;background:var(--cream-2);border-radius:10px;padding:7px 10px;margin-top:-2px"><b>🅿️ Start:</b> '+h.start+'<br><b>🎒 Z niemowlakiem:</b> '+h.baby+'</p>'+
+     '<div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;align-items:center">'+
+       '<a class="btn btn-map" href="'+gmaps(h.park)+'" target="_blank" rel="noopener">🅿️ Parking w Maps</a>'+
+       '<a class="btn btn-route" href="'+groute(h.park)+'" target="_blank" rel="noopener">🧭 Jedź z Ropienki</a>'+
+       '<a class="src" href="'+h.src+'" target="_blank" rel="noopener">📖 hasajacezajace.com →</a>'+
+     '</div>'+
+   '</div>';
+ });
+ wrap.innerHTML=html;
+ wrap.querySelectorAll('.hstar').forEach(function(b){
+   b.onclick=function(){
+     var id=b.dataset.hid;
+     if(hikeFavs.has(id)){hikeFavs.delete(id);}else{hikeFavs.add(id);}
+     saveHFavs();renderHikes();
+   };
+ });
+}
+document.getElementById('hikeFilters').querySelectorAll('.chip').forEach(function(c){
+ c.onclick=function(){
+   document.querySelectorAll('#hikeFilters .chip').forEach(function(x){x.classList.remove('on');});
+   c.classList.add('on');curHFilter=c.dataset.hf;renderHikes();
+ };
+});
+renderHikes();
+
+/* ================= NAWIGACJA ================= */
+function setTab(name){
+ document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id===name));
+ document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===name));
+ document.querySelectorAll('.tabbar button').forEach(t=>t.classList.toggle('active',t.dataset.tab===name));
+ const at=document.querySelector(`.tab[data-tab="${name}"]`);if(at)at.scrollIntoView({inline:'center',block:'nearest',behavior:'smooth'});
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+document.querySelectorAll('.tab,.tabbar button').forEach(b=>b.onclick=()=>setTab(b.dataset.tab));
+</script>
+</body>
+</html>
